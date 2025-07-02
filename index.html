@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Detection System - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <div class="login-header">
+            <h1>Fire Detection System</h1>
+            <p>Secure Access Portal</p>
+            <h1>🔥</h1>
+            <p>AI-powered fire detection using California camera feeds with real-time monitoring and alert capabilities.</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+        </form>
+
+        <div class="demo-users">
+            <strong>Demo Accounts:</strong><br>
+            username: user<br>
+            password: pass
+        </div>
+    </div>
+
+    <div class="main-app" id="mainApp">
+        <div class="button-bar">
+            <div>
+                <button id="addIotButton">Add IoT</button>
+                <button id="addCameraButton">Add Camera</button>
+                <button id="cameraFeedsButton">Camera Feeds</button>
+                <button id="aiChatButton" disabled>GenAI Chatbot</button>
+            </div>
+            <div class="user-info">
+                <span>Signed in as <strong id="currentUser"></strong></span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+        <div id="map">
+            <!-- coordinates for showing user where they place custom iot/camera -->
+            <div id="coordinates" class="coordinates"></div>
+        </div>
+        <div class="sidebar">
+            <!-- custom camera preview and ML image analysis -->
+            <div id="cameraDeviceOverview" class="camera-device-overview">
+                <h2 style="color: white">Custom Camera Image Analysis</h2>
+                <p style="color: white">
+                    Update custom camera image below every 60s<br>
+                    RandomForest ML model, n_estimators=100<br>
+                    likelihood of wildfire: 0.00%<br>
+                </p>
+                     
+                <!-- TEMPORARY FIX -->
+                <!-- TEMPORARY FIX -->
+                <!-- TEMPORARY FIX -->
+                <!-- script.js is not updating this part correctly so this is a temp fix -->
+                <div class="camera-container">
+                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg" alt="Mission1">
+                    <div class="camera-name">Mission1</div>
+                </div>
+                <!-- TEMPORARY FIX -->
+                <!-- TEMPORARY FIX -->
+                <!-- TEMPORARY FIX -->
+                 
+                <div id="customCameraThumbnail" class="custom-camera-thumbnail">
+                    <!-- let script.js update this section with the custom camera feed thumbnail (usually Fremont)-->
+                </div>
+            </div>
+
+            <div class="temp-humid-sensor-table">
+                <h2 style="color: white">Temperature & Humidity Sensor Readings</h2>
+                <table> <thead> <tr> <th>Timestamp</th> <th>Temperature (°C)</th> <th>Humidity (%)</th> </tr> </thead>
+                    <tbody id="tempHumidSensorData"> </tbody>
+                </table>
+            </div>
+
+            <div class="gas-sensor-table">
+                <h2 style="color: white">Gas Sensor Readings</h2>
+                <table> <thead> <tr> <th>Timestamp</th> <th>Status</th> </tr> </thead>
+                    <tbody id="gasSensorData"></tbody>
+                </table>
+            </div>
+
+            <br>
+            <!-- break for formatting-->
+            <!-- add camera feeds to sidebar -->
+            <div id="cameraFeeds" class="camera-feeds">
+                <!-- script.js will update this section every60s with camera feed thumbnails -->
+            </div>
+        </div>
+    </div>
+
+    <!-- load leaflet js library, run script.js -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="camera-list.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

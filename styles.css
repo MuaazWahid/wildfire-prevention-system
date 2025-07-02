@@ -1,0 +1,253 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* formatting for login */
+.login-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.login-header {
+    margin-bottom: 2rem;
+}
+.login-header h1 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+.login-header p {
+    color: #666;
+    font-size: 0.9rem;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+.login-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.login-btn:hover {
+    transform: translateY(-2px);
+}
+.error-message {
+    color: #e74c3c;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    display: none;
+}
+.success-message {
+    color: #27ae60;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    display: none;
+}
+.demo-users {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #888;
+    text-align: left;
+}
+.demo-users strong {
+    color: #666;
+}
+
+/* formatting main app button bar, map, and sidebar */
+.main-app {
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+}
+.main-app .button-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+.main-app .button-bar button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+.main-app .button-bar button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+} 
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logout-btn {
+    background-color: #dc3545 !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+}
+
+/* leaflet map integration */
+#map {
+    height: calc(100vh - 60px);
+    width: 50%;
+    float: left;
+}
+/* formatting for coordinates when dragging iot/camera on map */
+.coordinates {
+    position: absolute;
+    background: white;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 1000;
+}
+.sidebar {
+    width: 50%;
+    height: calc(100vh - 60px);
+    float: left;
+    background-color: #3d3d40;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.custom-camera-thumbnail {
+    display: none;
+}
+.custom-camera-thumbnail img {
+    width: 30%;
+    height: auto;
+    margin: 5px;
+    border-radius: 4px;
+}
+
+/* formatting temperature & humidity sensor data output */
+.temp-humid-sensor-table {
+    margin-top: 20px;
+}
+.temp-humid-sensor-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.temp-humid-sensor-table th, .temp-humid-sensor-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+.temp-humid-sensor-table th {
+    background-color: #eee;
+}
+
+/* formatting gas sensor data output */
+.gas-sensor-table {
+    margin-top: 20px;
+}
+.gas-sensor-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.gas-sensor-table th, .gas-sensor-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+.gas-sensor-table th {
+    background-color: #eee;
+}
+/* color gas output as green if safe, red if not safe */
+.gas-sensor-table .safe {
+    color: lightgreen;
+}
+.gas-sensor-table .alert {
+    color: red;
+    font-weight: bold;
+}
+
+/* formatting ALERTCalifornia cameras */
+.camera-feeds {
+    display: none;
+}
+.camera-feeds img {
+    width: 30%;
+    height: auto;
+    margin: 5px;
+    border-radius: 4px;
+}
+.camera-container {
+    position: relative;
+    display: inline-block;
+    margin: 2px;
+}
+.camera-container {
+    width: 30%;
+    margin: 1%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.camera-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.camera-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 2px 6px;
+    font-size: 15px;
+    border-radius: 0 4px 0 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
