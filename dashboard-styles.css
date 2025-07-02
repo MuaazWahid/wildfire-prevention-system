@@ -224,11 +224,8 @@ body {
 .camera-container {
     position: relative;
     display: inline-block;
-    margin: 2px;
-}
-.camera-container {
-    width: 30%;
     margin: 1%;
+    width: 30%;
     display: inline-block;
     box-sizing: border-box;
 }

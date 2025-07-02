@@ -202,8 +202,7 @@ function initializeMainApplication() {
             'tempHumidSensorData',
             (cells) => {
                 const timestamp = cells[0].textContent.trim();
-                // convert temperature from celsius to fahrenheit
-                const temperature = cells[1].textContent.trim() * 9 / 5 + 32 ;
+                const temperature = cells[1].textContent.trim();
                 const humidity = cells[2].textContent.trim();
 
                 const newRow = document.createElement('tr');
@@ -284,15 +283,14 @@ function initializeMainApplication() {
     setInterval(fetchCameraFeeds, 60000);
 }
 
-// Auto-focus on username field
+// auto-focus on username field
 usernameInput.focus();
-
-// Check if user is already logged in
+// check if user is already logged in
 const loggedInUser = sessionStorage.getItem('currentUser');
 if (loggedInUser) {
     loginContainerDiv.style.display = 'none';
     mainAppDiv.style.display = 'block';
     document.getElementById('currentUser').textContent = loggedInUser;
-    // Delay initialization to ensure DOM is ready
+    // delay initialization to ensure DOM is ready
     setTimeout(initializeMainApplication, 100);
 }

@@ -23,25 +23,22 @@ body {
 .button-bar button {
     padding: 10px 20px;
     border: none;
-    background-color: #007bff;
     color: white;
     cursor: pointer;
     border-radius: 4px;
     margin-right: 5px;
 }
+.camera-feeds-button {
+    background: linear-gradient(90deg, #77d5ed 20%, #11cd46 100%);
+}
 .landing-page-header {
     background: linear-gradient(90deg, #ebb548 30%, #d01d0d 100%);
-    padding: 10px 20px;
-    border: none;
-    color: white;
-    border-radius: 10px;
+}
+.feedback-button {
+    background: linear-gradient(90deg, #ebb548 30%, #d01d0d 100%);
 }
 .login-button {
     background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    padding: 10px 20px;
-    border: none;
-    color: white;
-    border-radius: 10px;
 }
 
 /* leaflet map integration */
@@ -73,11 +70,8 @@ body {
 .camera-container {
     position: relative;
     display: inline-block;
-    margin: 2px;
-}
-.camera-container {
-    width: 30%;
     margin: 1%;
+    width: 30%;
     display: inline-block;
     box-sizing: border-box;
 }
