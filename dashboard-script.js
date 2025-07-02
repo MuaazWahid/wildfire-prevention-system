@@ -110,9 +110,10 @@ function initializeMainApplication() {
 
     // fetch camera custom camera feed
     function fetchCustomCamera() {
+        const timestamp = Date.now();
         customCameraThumbnailDiv.innerHTML = `
         <div class="camera-container">
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg" alt="Mission1">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${timestamp}" alt="Mission1">
             <div class="camera-name">Mission1</div>
         </div>
         `;
