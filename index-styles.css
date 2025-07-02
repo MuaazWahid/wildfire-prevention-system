@@ -42,7 +42,6 @@ body {
     border: none;
     color: white;
     border-radius: 10px;
-    cursor: pointer;
 }
 
 /* leaflet map integration */
@@ -50,16 +49,6 @@ body {
     height: calc(100vh - 60px);
     width: 50%;
     float: left;
-}
-/* formatting for coordinates when dragging iot/camera on map */
-.coordinates {
-    position: absolute;
-    background: white;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    pointer-events: none;
-    z-index: 1000;
 }
 .sidebar {
     width: 50%;
@@ -101,7 +90,7 @@ body {
     position: absolute;
     bottom: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     color: white;
     padding: 2px 6px;
     font-size: 15px;

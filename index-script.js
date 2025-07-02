@@ -15,18 +15,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // fetch camera list and display feeds with fresh timestamps
 function fetchCameraFeeds() {
-    const timestamp = Date.now();
     let imagesHtml = '';
-    
     CAMERA_NAMES.forEach(cameraName => {
         imagesHtml += `
             <div class="camera-container">
-                <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}" alt="${cameraName}">
+                <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg" alt="${cameraName}">
                 <div class="camera-name">${cameraName}</div>
             </div>
         `;
     });
-
     cameraFeedsDiv.innerHTML = imagesHtml;
 }
 
@@ -39,11 +36,16 @@ cameraFeedsButton.addEventListener('click', function() {
     }
 });
 
-// Add login button redirect functionality
+// login button redirect functionality
 document.getElementById('loginButton').addEventListener('click', function() {
     window.location.href = 'dashboard.html';
 });
 
-// Every 60 seconds update GUI with camera feeds
+// every 60 seconds update GUI with camera feeds
 fetchCameraFeeds();
 setInterval(fetchCameraFeeds, 60000);
+
+// click on the cameraFeedsButton when the page loads so camera feeds displays by default when loading in
+document.addEventListener('DOMContentLoaded', function() {
+    cameraFeedsButton.click();
+});
