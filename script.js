@@ -70,10 +70,10 @@ function initializeMainApplication() {
     // function to add an IoT device to the map
     function addIotToMap(latLng) {
         var customIcon = L.icon({
-            iconUrl: 'images/esp32.jpg',
-            iconSize: [25, 35],
-            iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
-            popupAnchor: [1, -34] // point from which the popup should open relative to the iconAnchor
+            iconUrl: 'images/esp32.svg',
+            iconSize: [40, 30],
+            iconAnchor: [18, 25], // center iot relative to mouse
+            popupAnchor: [2, -25] // center the popup if clicked
         });
         var iotMarker = L.marker(latLng, {icon: customIcon}).addTo(map);
         iotMarker.bindPopup('IoT @ ' + latLng.lat.toFixed(4) + ', ' + latLng.lng.toFixed(4)).openPopup();
@@ -84,8 +84,8 @@ function initializeMainApplication() {
         var customIcon = L.icon({
             iconUrl: 'images/red-camera.png',
             iconSize: [25, 25],
-            iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
-            popupAnchor: [1, -34] // point from which the popup should open relative to the iconAnchor
+            iconAnchor: [15, 25], // center camera relative to mouse
+            popupAnchor: [-2, -25] // center the popup if clicked
         });
         var cameraMarker = L.marker(latLng, {icon: customIcon}).addTo(map);
         cameraMarker.bindPopup('Camera @ ' + latLng.lat.toFixed(4) + ', ' + latLng.lng.toFixed(4)).openPopup();

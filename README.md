@@ -17,6 +17,6 @@ A webapp to help identify and prevent wildfires
   - Wi-Fi for data transmission
   - LTE for camera data transmission
   - maybe smoke, motion, air quality, and/or AI? sensors
-- **ML:** sci-kit-learn for image classification of wildfire signs (smoke/fire)
+- **ML:** scikit-learn for image classification of wildfire signs (smoke/fire)
 - **Generative AI:** Hugging Face Transformers/IBM Granite LLM & Vision models for data insights, wildfire tips, and streamlining communication
 - **Database:** MySQL for storing sensor data
