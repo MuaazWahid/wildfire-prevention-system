@@ -182,11 +182,13 @@ function initializeMainApplication() {
                 const timestamp = cells[0].textContent.trim();
                 const status = cells[1].textContent.trim();
                 const statusClass = cells[1].classList.contains('alert') ? 'alert' : 'safe';
+                const analogValue = cells[2].textContent.trim();
 
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
                     <td style="color: white">${timestamp}</td>
                     <td class="${statusClass}">${status}</td>
+                    <td style="color: white">${analogValue}</td>
                 `;
                 return newRow;
             }
