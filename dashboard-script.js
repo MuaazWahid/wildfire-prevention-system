@@ -202,7 +202,8 @@ function initializeMainApplication() {
             'tempHumidSensorData',
             (cells) => {
                 const timestamp = cells[0].textContent.trim();
-                const temperature = cells[1].textContent.trim();
+                // convert temperature from celsius to fahrenheit
+                const temperature = cells[1].textContent.trim() * 9 / 5 + 32 ;
                 const humidity = cells[2].textContent.trim();
 
                 const newRow = document.createElement('tr');
