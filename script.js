@@ -2,6 +2,7 @@
 const users = { 'user': 'pass', };
 // save form elements to prevent repeated DOM queries
 const loginForm = document.getElementById('loginForm');
+const currentUser = document.getElementById('currentUser');
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
 const errorMessageDiv = document.getElementById('errorMessage');
@@ -33,7 +34,7 @@ loginForm.addEventListener('submit', function(e) {
         setTimeout(() => {
             loginContainerDiv.style.display = 'none';
             mainAppDiv.style.display = 'block';
-            document.getElementById('currentUser').textContent = username;
+            currentUser.textContent = username;
             initializeMainApplication();
         }, 1000);
         
@@ -52,13 +53,21 @@ function initializeMainApplication() {
     // using AllOrigins CORS proxy to accessing sensor data
     const PROXY_URL = 'https://api.allorigins.win/get?url=';
     const coordinatesDiv = document.getElementById('coordinates');
+    
+    const addIotButton = document.getElementById('addIotButton')
+    const addCameraButton = document.getElementById('addCameraButton');
+    const cameraFeedsButton = document.getElementById('cameraFeedsButton');
+    const logoutButton = document.getElementById('logoutBtn');
+
+    const customCameraThumbnailDiv = document.getElementById('customCameraThumbnail');
     const cameraFeedsDiv = document.getElementById('cameraFeeds');
+    
     // set leaflet map initial view (California, USA)
     const map = L.map('map').setView([37.3587, -121.9276], 11);
     // save current user action so that we can update GUI dashboard accordingly
     let currentAction = null;
 
-    // add OpenStreetMap tiles
+    // intitialize leaflet and add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: `
         &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
@@ -101,7 +110,7 @@ function initializeMainApplication() {
 
     // fetch camera custom camera feed
     function fetchCustomCamera() {
-        document.getElementById('customCameraThumbnail').innerHTML = `
+        customCameraThumbnailDiv.innerHTML = `
         <div class="camera-container">
             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg" alt="Mission1">
             <div class="camera-name">Mission1</div>
@@ -209,7 +218,7 @@ function initializeMainApplication() {
     }
 
     // logic for clicking on add iot button
-    document.getElementById('addIotButton').addEventListener('click', function() {
+    addIotButton.addEventListener('click', function() {
         currentAction = 'iot';
         map.on('mousemove', function(e) {
             updateCoordinates(e.latlng);
@@ -224,7 +233,7 @@ function initializeMainApplication() {
     });
 
     // logic for clicking on add camera button
-    document.getElementById('addCameraButton').addEventListener('click', function() {
+    addCameraButton.addEventListener('click', function() {
         currentAction = 'camera';
         map.on('mousemove', function(e) {
             updateCoordinates(e.latlng);
@@ -239,7 +248,7 @@ function initializeMainApplication() {
     });
 
     // logic for clicking on camera feeds button
-    document.getElementById('cameraFeedsButton').addEventListener('click', function() {
+    cameraFeedsButton.addEventListener('click', function() {
         if (cameraFeedsDiv.style.display === 'none' || cameraFeedsDiv.style.display === '') {
             cameraFeedsDiv.style.display = 'block';
         } else {
@@ -248,7 +257,7 @@ function initializeMainApplication() {
     });
 
     // logout functionality
-    document.getElementById('logoutBtn').addEventListener('click', function() {
+    logoutButton.addEventListener('click', function() {
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('loginTime');
         mainAppDiv.style.display = 'none';
@@ -279,11 +288,11 @@ function initializeMainApplication() {
 usernameInput.focus();
 
 // Check if user is already logged in
-const currentUser = sessionStorage.getItem('currentUser');
-if (currentUser) {
+const loggedInUser = sessionStorage.getItem('currentUser');
+if (loggedInUser) {
     loginContainerDiv.style.display = 'none';
     mainAppDiv.style.display = 'block';
-    document.getElementById('currentUser').textContent = currentUser;
+    document.getElementById('currentUser').textContent = loggedInUser;
     // Delay initialization to ensure DOM is ready
     setTimeout(initializeMainApplication, 100);
 }

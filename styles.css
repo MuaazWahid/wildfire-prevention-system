@@ -122,7 +122,7 @@ body {
 .main-app .button-bar button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-} 
+}
 .user-info {
     display: flex;
     align-items: center;
