@@ -15,11 +15,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // fetch camera list and display feeds with fresh timestamps
 function fetchCameraFeeds() {
+    const timestamp = Date.now();
     let imagesHtml = '';
     CAMERA_NAMES.forEach(cameraName => {
         imagesHtml += `
             <div class="camera-container">
-                <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg" alt="${cameraName}">
+                <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}" alt="${cameraName}">
                 <div class="camera-name">${cameraName}</div>
             </div>
         `;

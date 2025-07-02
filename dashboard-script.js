@@ -122,7 +122,6 @@ function initializeMainApplication() {
     function fetchCameraFeeds() {
         const timestamp = Date.now();
         let imagesHtml = '';
-        
         CAMERA_NAMES.forEach(cameraName => {
             imagesHtml += `
                 <div class="camera-container">
@@ -131,7 +130,6 @@ function initializeMainApplication() {
                 </div>
             `;
         });
-        
         cameraFeedsDiv.innerHTML = imagesHtml;
     }
 
