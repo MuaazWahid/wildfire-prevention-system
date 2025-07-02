@@ -26,7 +26,7 @@ function fetchCameraFeeds() {
             </div>
         `;
     });
-    
+
     cameraFeedsDiv.innerHTML = imagesHtml;
 }
 

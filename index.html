@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page - Predictive Wildfire Prevention System</title>
-    <link rel="stylesheet" href="landing-styles.css">
+    <link rel="stylesheet" href="index-styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
@@ -15,12 +15,11 @@
     </div>
     <div id="map"></div>
     <div class="sidebar">
-        <!-- landing-script.js will update the camera thumbnails feed in the sidebar every 60s -->
+        <!-- index-script.js will update the camera thumbnails feed in the sidebar every 60s -->
         <div id="cameraFeeds" class="camera-feeds"></div>
     </div>
 
-    <!-- load leaflet js library, run script.js -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="camera-list.js"></script>
-    <script src="landing-script.js" defer></script>
+    <script src="index-script.js" defer></script>
 </body>

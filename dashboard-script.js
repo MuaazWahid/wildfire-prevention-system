@@ -57,7 +57,7 @@ function initializeMainApplication() {
     const addIotButton = document.getElementById('addIotButton')
     const addCameraButton = document.getElementById('addCameraButton');
     const cameraFeedsButton = document.getElementById('cameraFeedsButton');
-    const logoutButton = document.getElementById('logoutBtn');
+    const logoutButton = document.getElementById('logoutButton');
 
     const customCameraThumbnailDiv = document.getElementById('customCameraThumbnail');
     const cameraFeedsDiv = document.getElementById('cameraFeeds');
