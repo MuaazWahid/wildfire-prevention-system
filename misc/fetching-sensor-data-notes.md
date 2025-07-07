@@ -1,5 +1,6 @@
 sensor data cant be accessed at link due to CORS limitations
 workarounds:
+- modify insert.php server request method, only POST?
 - use CORS proxy
 - modify CORS policy
 - try and access data through the file instead of through link
