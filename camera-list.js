@@ -49,7 +49,7 @@ const CAMERA_NAMES = [
     "MtAllison",
     "MtBielawski",
     "MtChaul",
-    "Diablo", // this is Mt Diablo actually
+    "Diablo", // this is called Mt Diablo actually, but it is referred to as Diablo in ALERTCalifornia's API
     "MtHamiltonSCC1",
     "MtHamiltonSCC2",
     "MtHamiltonSCC3",

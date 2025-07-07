@@ -14,7 +14,7 @@ const mainAppDiv = document.getElementById('mainApp');
 loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const username = usernameInput.value.trim();
+    const username = usernameInput.value.trim().toLowerCase();
     const password = passwordInput.value.trim();
     
     // hide previous messages
@@ -50,8 +50,6 @@ loginForm.addEventListener('submit', function(e) {
 // setup main dashboard GUI for user
 function initializeMainApplication() {
     // save form elements to prevent repeated DOM queries
-    // using AllOrigins CORS proxy to accessing sensor data
-    const PROXY_URL = 'https://api.allorigins.win/get?url=';
     const coordinatesDiv = document.getElementById('coordinates');
     
     const addIotButton = document.getElementById('addIotButton')
@@ -136,6 +134,8 @@ function initializeMainApplication() {
 
     // fetch and display sensor data
     function fetchSensorData(uri, tableId, parseRowFunction) {
+        // we are using a CORS proxy since browser will enforce CORS policy when executing javascript
+        const PROXY_URL = 'https://api.allorigins.win/get?url=';
         fetch(PROXY_URL + encodeURIComponent(uri))
             .then(response => {
                 if (!response.ok) {
