@@ -64,6 +64,8 @@ function initializeMainApplication() {
     const map = L.map('map').setView([37.3587, -121.9276], 11);
     // save current user action so that we can update GUI dashboard accordingly
     let currentAction = null;
+    let isFullscreen = false;
+    let currentFullscreenCamera = null;
 
     // intitialize leaflet and add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -108,28 +110,77 @@ function initializeMainApplication() {
 
     // fetch camera custom camera feed
     function fetchCustomCamera() {
-        const timestamp = Date.now();
         customCameraThumbnailDiv.innerHTML = `
         <div class="camera-container">
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${timestamp}">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${Date.now()}">
             <div class="camera-name">Mission1</div>
         </div>
         `;
     }
     
-    // fetch camera list and display feeds with fresh timestamps
+    // update camera feeds display
     function fetchCameraFeeds() {
-        const timestamp = Date.now();
         let imagesHtml = '';
         CAMERA_NAMES.forEach(cameraName => {
             imagesHtml += `
                 <div class="camera-container">
-                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}">
+                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
                     <div class="camera-name">${cameraName}</div>
                 </div>
             `;
         });
         cameraFeedsDiv.innerHTML = imagesHtml;
+    }
+
+    function openFullscreen(cameraName) {
+        if (isFullscreen) return; // prevent multiple fullscreen instances
+        isFullscreen = true;
+        currentFullscreenCamera = cameraName;
+        // create fullscreen container
+        const fullscreenContainer = document.createElement('div');
+        fullscreenContainer.className = 'fullscreen-camera';
+        fullscreenContainer.innerHTML = `
+            <div class="fullscreen-header">
+                <span class="fullscreen-camera-name">${cameraName}</span>
+                <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
+            </div>
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
+                class="fullscreen-image" id="fullscreen-image">
+        `;
+        
+        // hide thumbnail grid and show fullscreen
+        const thumbnailContainers = document.querySelectorAll('.camera-container');
+        thumbnailContainers.forEach(container => container.style.display = 'none');
+        cameraFeedsDiv.appendChild(fullscreenContainer);
+        
+        // update the fullscreen image
+        updateFullscreenImage();
+    }
+    function updateFullscreenImage() {
+        if (!isFullscreen || !currentFullscreenCamera) return;
+        
+        const fullscreenImage = document.getElementById('fullscreen-image');
+        if (fullscreenImage) {
+            fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
+        }
+    }
+    function closeFullscreen() {
+        if (!isFullscreen) return;
+        isFullscreen = false;
+        currentFullscreenCamera = null;
+        
+        // remove fullscreen container
+        const fullscreenContainer = document.querySelector('.fullscreen-camera');
+        if (fullscreenContainer) {
+            fullscreenContainer.remove();
+        }
+        
+        // show all thumbnails again
+        const thumbnailContainers = document.querySelectorAll('.camera-container');
+        thumbnailContainers.forEach(container => container.style.display = 'inline-block');
+        
+        // refresh thumbnail feeds
+        fetchCameraFeeds();
     }
 
     // fetch and display sensor data
@@ -248,6 +299,15 @@ function initializeMainApplication() {
         });
     });
 
+    // click event listener for camera thumbnails
+    document.addEventListener('click', event => {
+        const clicked = event.target;
+        const cameraContainer = clicked.closest('.camera-container');
+        if (cameraContainer && !isFullscreen) {
+            openFullscreen(cameraContainer.dataset.cameraName);
+        }
+    });
+
     // logout button functionality
     logoutButton.addEventListener('click', function() {
         sessionStorage.removeItem('currentUser');
@@ -261,7 +321,7 @@ function initializeMainApplication() {
         successMessageDiv.style.display = 'none';
     });
 
-    // Every 60 seconds update dashboard with:
+    // every 60 seconds update dashboard with:
     // - custom camera thumbnail
     // - gas sensor data
     // - temperature and humidity sensor data

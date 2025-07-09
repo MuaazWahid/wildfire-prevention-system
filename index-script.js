@@ -42,7 +42,7 @@ function openFullscreen(cameraName) {
     fullscreenContainer.innerHTML = `
         <div class="fullscreen-header">
             <span class="fullscreen-camera-name">${cameraName}</span>
-            <button class="close-fullscreen" onclick="closeFullscreen()">×</button>
+            <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
         </div>
         <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
              class="fullscreen-image" id="fullscreen-image">
@@ -56,6 +56,15 @@ function openFullscreen(cameraName) {
     
     // Start updating the fullscreen image
     updateFullscreenImage();
+}
+
+function updateFullscreenImage() {
+    if (!isFullscreen || !currentFullscreenCamera) return;
+    
+    const fullscreenImage = document.getElementById('fullscreen-image');
+    if (fullscreenImage) {
+        fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
+    }
 }
 
 function closeFullscreen() {
@@ -78,16 +87,6 @@ function closeFullscreen() {
     fetchCameraFeeds();
 }
 
-function updateFullscreenImage() {
-    if (!isFullscreen || !currentFullscreenCamera) return;
-    
-    const fullscreenImage = document.getElementById('fullscreen-image');
-    if (fullscreenImage) {
-        const timestamp = Date.now();
-        fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${timestamp}`;
-    }
-}
-
 // logic for clicking on camera feeds button
 cameraFeedsButton.addEventListener('click', function() {
     if (cameraFeedsDiv.style.display === 'none' || cameraFeedsDiv.style.display === '') {
@@ -106,21 +105,12 @@ document.getElementById('loginButton').addEventListener('click', function() {
 document.addEventListener('click', event => {
     const clicked = event.target;
     const cameraContainer = clicked.closest('.camera-container');
-    
     if (cameraContainer && !isFullscreen) {
-        const cameraName = cameraContainer.dataset.cameraName;
-        openFullscreen(cameraName);
+        openFullscreen(cameraContainer.dataset.cameraName);
     }
 });
 
-// Escape key to close fullscreen
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && isFullscreen) {
-        closeFullscreen();
-    }
-});
-
-// Update images every 60 seconds
+// update cameras every 60 seconds
 fetchCameraFeeds();
 setInterval(() => {
     if (isFullscreen) {

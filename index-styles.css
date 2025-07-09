@@ -129,6 +129,13 @@ body {
     font-size: 18px;
     font-weight: bold;
 }
+.fullscreen-image {
+    flex: 1;
+    width: 100%;
+    height: calc(100% - 60px);
+    object-fit: contain;
+    background-color: #000;
+}
 
 .close-fullscreen {
     background: none;
@@ -142,11 +149,4 @@ body {
 }
 .close-fullscreen:hover {
     background-color: #ff4444;
-}
-.fullscreen-image {
-    flex: 1;
-    width: 100%;
-    height: calc(100% - 60px);
-    object-fit: contain;
-    background-color: #000;
 }
