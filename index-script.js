@@ -77,18 +77,30 @@ document.getElementById('loginButton').addEventListener('click', function() {
     window.location.href = 'dashboard.html';
 });
 
-document.addEventListener('click', function(event) {
+
+function openFullscreen(cameraName) {
+    // Retain reference for fullscreen control
+    const thumbnail = document.querySelector(`[data-camera-name="${cameraName}"]`);
+
+    // Ensure fullscreen mode behaves correctly
+    if (thumbnail.requestFullscreen) { // for modern browsers
+        thumbnail.requestFullscreen();
+    } else if (thumbnail.mozRequestFullscreen) { // for Firefox
+        thumbnail.mozRequestFullscreen();
+    }
+
+    // Hide other thumbnails
+    const allThumbnails = document.querySelectorAll('.camera-container');
+    allThumbnails.forEach(thumb => thumb.style.display = 'none');
+}
+
+// Click event listener - modified for clarity
+document.addEventListener('click', event => {
     const clicked = event.target;
+    
+    // Only capture clicks on camera containers
     if (clicked.classList.contains('camera-container') && !clicked.contains(event.target)) {
-        const fullscreenImage = clicked;
-        fullscreenImage.style.width = 'auto';
-        fullscreenImage.style.height = 'auto';
-        fullscreenImage.style.position = '';
-        fullscreenImage.style.top = '';
-        fullscreenImage.style.left = '';
-        // Re-show other thumbnails
-        const allThumbnails = document.querySelectorAll('.camera-container');
-        allThumbnails.forEach(thumb => thumb.style.display = 'block');
+        openFullscreen(clicked.dataset.cameraName);
     }
 });
 
@@ -96,7 +108,7 @@ document.addEventListener('click', function(event) {
 fetchCameraFeeds();
 setInterval(fetchCameraFeeds, 60000);
 
-// click on the cameraFeedsButton when the page loads so camera feeds displays by default when loading in
+// click on the cameraFeedsButton when the page loads so camera feeds are displayed by default when loading the site
 document.addEventListener('DOMContentLoaded', function() {
     cameraFeedsButton.click();
 });

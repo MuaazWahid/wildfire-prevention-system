@@ -284,7 +284,8 @@ function initializeMainApplication() {
         }
     });
 
-    // click on the cameraFeedsButton when the page loads so camera feeds displays by default when loading in
+    // for some reason this is not working
+    // click on the cameraFeedsButton when the page loads so camera feeds are displayed by default when loading the site
     document.addEventListener('DOMContentLoaded', function() {
         cameraFeedsButton.click();
     });
