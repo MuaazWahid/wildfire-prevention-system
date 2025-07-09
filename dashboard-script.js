@@ -111,7 +111,7 @@ function initializeMainApplication() {
         const timestamp = Date.now();
         customCameraThumbnailDiv.innerHTML = `
         <div class="camera-container">
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${timestamp}" alt="Mission1">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${timestamp}">
             <div class="camera-name">Mission1</div>
         </div>
         `;
@@ -124,7 +124,7 @@ function initializeMainApplication() {
         CAMERA_NAMES.forEach(cameraName => {
             imagesHtml += `
                 <div class="camera-container">
-                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}" alt="${cameraName}">
+                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}">
                     <div class="camera-name">${cameraName}</div>
                 </div>
             `;
@@ -248,16 +248,7 @@ function initializeMainApplication() {
         });
     });
 
-    // logic for clicking on camera feeds button
-    cameraFeedsButton.addEventListener('click', function() {
-        if (cameraFeedsDiv.style.display === 'none' || cameraFeedsDiv.style.display === '') {
-            cameraFeedsDiv.style.display = 'block';
-        } else {
-            cameraFeedsDiv.style.display = 'none';
-        }
-    });
-
-    // logout functionality
+    // logout button functionality
     logoutButton.addEventListener('click', function() {
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('loginTime');
@@ -270,7 +261,7 @@ function initializeMainApplication() {
         successMessageDiv.style.display = 'none';
     });
 
-    // Every 60 seconds update GUI with:
+    // Every 60 seconds update dashboard with:
     // - custom camera thumbnail
     // - gas sensor data
     // - temperature and humidity sensor data
@@ -283,6 +274,20 @@ function initializeMainApplication() {
     setInterval(fetchGasSensorData, 60000);
     setInterval(fetchTempHumidSensorData, 60000);
     setInterval(fetchCameraFeeds, 60000);
+
+    // logic for clicking on camera feeds button
+    cameraFeedsButton.addEventListener('click', function() {
+        if (cameraFeedsDiv.style.display === 'none' || cameraFeedsDiv.style.display === '') {
+            cameraFeedsDiv.style.display = 'block';
+        } else {
+            cameraFeedsDiv.style.display = 'none';
+        }
+    });
+
+    // click on the cameraFeedsButton when the page loads so camera feeds displays by default when loading in
+    document.addEventListener('DOMContentLoaded', function() {
+        cameraFeedsButton.click();
+    });
 }
 
 // auto-focus on username field

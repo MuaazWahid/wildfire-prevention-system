@@ -13,19 +13,54 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     <a href="https://alertcalifornia.org/terms-of-use/">UC San Diego</a>`
 }).addTo(map);
 
+// // fetch camera list and display feeds with fresh timestamps
+// function fetchCameraFeeds() {
+//     const timestamp = Date.now();
+//     let imagesHtml = '';
+//     CAMERA_NAMES.forEach(cameraName => {
+//         imagesHtml += `
+//         <div class="camera-container">
+//             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}">
+//             <div class="camera-name">${cameraName}</div>
+//         </div>
+//         `;
+//     });
+//     cameraFeedsDiv.innerHTML = imagesHtml;
+// }
+
 // fetch camera list and display feeds with fresh timestamps
 function fetchCameraFeeds() {
     const timestamp = Date.now();
     let imagesHtml = '';
     CAMERA_NAMES.forEach(cameraName => {
         imagesHtml += `
-            <div class="camera-container">
-                <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}" alt="${cameraName}">
-                <div class="camera-name">${cameraName}</div>
-            </div>
+        <div class="camera-container" data-camera-name="${cameraName}">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}" onclick="openFullscreen(${cameraName})">
+            <div class="camera-name">${cameraName}</div>
+        </div>
         `;
     });
     cameraFeedsDiv.innerHTML = imagesHtml;
+}
+
+function openFullscreen(cameraName) {
+    // Retrieve the thumbnail element by its cameraName data attribute
+    const thumbnail = document.querySelector(`[data-camera-name="${cameraName}"]`);
+
+    // Set style to take full sidebar width
+    thumbnail.style.width = '100%';
+    thumbnail.style.height = '100vh'; // Set to the full viewport height
+    thumbnail.style.position = 'fixed';
+    thumbnail.style.top = '0';
+    thumbnail.style.left = '0';
+
+    // Hide other thumbnail elements
+    const thumbnails = document.querySelectorAll('.camera-container');
+    thumbnails.forEach(thumb => {
+        if (thumb !== thumbnail) {
+            thumb.style.display = 'none';
+        }
+    });
 }
 
 // logic for clicking on camera feeds button
@@ -40,6 +75,21 @@ cameraFeedsButton.addEventListener('click', function() {
 // login button redirect functionality
 document.getElementById('loginButton').addEventListener('click', function() {
     window.location.href = 'dashboard.html';
+});
+
+document.addEventListener('click', function(event) {
+    const clicked = event.target;
+    if (clicked.classList.contains('camera-container') && !clicked.contains(event.target)) {
+        const fullscreenImage = clicked;
+        fullscreenImage.style.width = 'auto';
+        fullscreenImage.style.height = 'auto';
+        fullscreenImage.style.position = '';
+        fullscreenImage.style.top = '';
+        fullscreenImage.style.left = '';
+        // Re-show other thumbnails
+        const allThumbnails = document.querySelectorAll('.camera-container');
+        allThumbnails.forEach(thumb => thumb.style.display = 'block');
+    }
 });
 
 // every 60 seconds update GUI with camera feeds
