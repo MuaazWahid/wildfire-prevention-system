@@ -1,6 +1,9 @@
 // save form elements to prevent repeated DOM queries
 const cameraFeedsButton = document.getElementById('cameraFeedsButton');
 const cameraFeedsDiv = document.getElementById('cameraFeeds');
+let isFullscreen = false;
+let currentFullscreenCamera = null;
+
 // set leaflet map initial view (California, USA)
 const map = L.map('map').setView([37.3587, -121.9276], 11);
 
@@ -13,29 +16,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     <a href="https://alertcalifornia.org/terms-of-use/">UC San Diego</a>`
 }).addTo(map);
 
-// // fetch camera list and display feeds with fresh timestamps
-// function fetchCameraFeeds() {
-//     const timestamp = Date.now();
-//     let imagesHtml = '';
-//     CAMERA_NAMES.forEach(cameraName => {
-//         imagesHtml += `
-//         <div class="camera-container">
-//             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}">
-//             <div class="camera-name">${cameraName}</div>
-//         </div>
-//         `;
-//     });
-//     cameraFeedsDiv.innerHTML = imagesHtml;
-// }
-
-// fetch camera list and display feeds with fresh timestamps
+// update camera feeds display
 function fetchCameraFeeds() {
-    const timestamp = Date.now();
     let imagesHtml = '';
     CAMERA_NAMES.forEach(cameraName => {
         imagesHtml += `
         <div class="camera-container" data-camera-name="${cameraName}">
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${timestamp}" onclick="openFullscreen(${cameraName})">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
             <div class="camera-name">${cameraName}</div>
         </div>
         `;
@@ -44,23 +31,61 @@ function fetchCameraFeeds() {
 }
 
 function openFullscreen(cameraName) {
-    // Retrieve the thumbnail element by its cameraName data attribute
-    const thumbnail = document.querySelector(`[data-camera-name="${cameraName}"]`);
+    if (isFullscreen) return; // prevent multiple fullscreen instances
+    
+    isFullscreen = true;
+    currentFullscreenCamera = cameraName;
+    
+    // Create fullscreen container
+    const fullscreenContainer = document.createElement('div');
+    fullscreenContainer.className = 'fullscreen-camera';
+    fullscreenContainer.innerHTML = `
+        <div class="fullscreen-header">
+            <span class="fullscreen-camera-name">${cameraName}</span>
+            <button class="close-fullscreen" onclick="closeFullscreen()">×</button>
+        </div>
+        <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
+             class="fullscreen-image" id="fullscreen-image">
+    `;
+    
+    // Hide thumbnail grid and show fullscreen
+    const thumbnailContainers = document.querySelectorAll('.camera-container');
+    thumbnailContainers.forEach(container => container.style.display = 'none');
+    
+    cameraFeedsDiv.appendChild(fullscreenContainer);
+    
+    // Start updating the fullscreen image
+    updateFullscreenImage();
+}
 
-    // Set style to take full sidebar width
-    thumbnail.style.width = '100%';
-    thumbnail.style.height = '100vh'; // Set to the full viewport height
-    thumbnail.style.position = 'fixed';
-    thumbnail.style.top = '0';
-    thumbnail.style.left = '0';
+function closeFullscreen() {
+    if (!isFullscreen) return;
+    
+    isFullscreen = false;
+    currentFullscreenCamera = null;
+    
+    // Remove fullscreen container
+    const fullscreenContainer = document.querySelector('.fullscreen-camera');
+    if (fullscreenContainer) {
+        fullscreenContainer.remove();
+    }
+    
+    // Show all thumbnails again
+    const thumbnailContainers = document.querySelectorAll('.camera-container');
+    thumbnailContainers.forEach(container => container.style.display = 'inline-block');
+    
+    // Refresh thumbnail feeds
+    fetchCameraFeeds();
+}
 
-    // Hide other thumbnail elements
-    const thumbnails = document.querySelectorAll('.camera-container');
-    thumbnails.forEach(thumb => {
-        if (thumb !== thumbnail) {
-            thumb.style.display = 'none';
-        }
-    });
+function updateFullscreenImage() {
+    if (!isFullscreen || !currentFullscreenCamera) return;
+    
+    const fullscreenImage = document.getElementById('fullscreen-image');
+    if (fullscreenImage) {
+        const timestamp = Date.now();
+        fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${timestamp}`;
+    }
 }
 
 // logic for clicking on camera feeds button
@@ -77,36 +102,33 @@ document.getElementById('loginButton').addEventListener('click', function() {
     window.location.href = 'dashboard.html';
 });
 
-
-function openFullscreen(cameraName) {
-    // Retain reference for fullscreen control
-    const thumbnail = document.querySelector(`[data-camera-name="${cameraName}"]`);
-
-    // Ensure fullscreen mode behaves correctly
-    if (thumbnail.requestFullscreen) { // for modern browsers
-        thumbnail.requestFullscreen();
-    } else if (thumbnail.mozRequestFullscreen) { // for Firefox
-        thumbnail.mozRequestFullscreen();
-    }
-
-    // Hide other thumbnails
-    const allThumbnails = document.querySelectorAll('.camera-container');
-    allThumbnails.forEach(thumb => thumb.style.display = 'none');
-}
-
-// Click event listener - modified for clarity
+// click event listener for camera thumbnails
 document.addEventListener('click', event => {
     const clicked = event.target;
+    const cameraContainer = clicked.closest('.camera-container');
     
-    // Only capture clicks on camera containers
-    if (clicked.classList.contains('camera-container') && !clicked.contains(event.target)) {
-        openFullscreen(clicked.dataset.cameraName);
+    if (cameraContainer && !isFullscreen) {
+        const cameraName = cameraContainer.dataset.cameraName;
+        openFullscreen(cameraName);
     }
 });
 
-// every 60 seconds update GUI with camera feeds
+// Escape key to close fullscreen
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && isFullscreen) {
+        closeFullscreen();
+    }
+});
+
+// Update images every 60 seconds
 fetchCameraFeeds();
-setInterval(fetchCameraFeeds, 60000);
+setInterval(() => {
+    if (isFullscreen) {
+        updateFullscreenImage();
+    } else {
+        fetchCameraFeeds();
+    }
+}, 60000);
 
 // click on the cameraFeedsButton when the page loads so camera feeds are displayed by default when loading the site
 document.addEventListener('DOMContentLoaded', function() {
