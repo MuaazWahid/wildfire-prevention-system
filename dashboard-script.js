@@ -235,19 +235,6 @@ function initializeMainApplication() {
         }
     });
 
-    // logic for clicking on logout button
-    logoutButton.addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        sessionStorage.removeItem('loginTime');
-        mainAppDiv.style.display = 'none';
-        loginContainerDiv.style.display = 'block';
-        // reset form
-        usernameInput.value = '';
-        passwordInput.value = '';
-        errorMessageDiv.style.display = 'none';
-        successMessageDiv.style.display = 'none';
-    });
-
     // function to handle expanding a camera thumbnail
     function openFullscreen(cameraName) {
         if (isFullscreen) return; // prevent multiple fullscreen instances
@@ -347,6 +334,19 @@ function initializeMainApplication() {
     setInterval(fetchCameraFeeds, 60000);
     // display camera feeds on loading dashboard
     cameraFeedsButton.click();
+
+    // logic for clicking on logout button
+    logoutButton.addEventListener('click', function() {
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('loginTime');
+        mainAppDiv.style.display = 'none';
+        loginContainerDiv.style.display = 'block';
+        // reset form
+        usernameInput.value = '';
+        passwordInput.value = '';
+        errorMessageDiv.style.display = 'none';
+        successMessageDiv.style.display = 'none';
+    });
 }
 
 // auto-focus on username field
