@@ -1,3 +1,7 @@
+// list of ALERTCalifornia cameras ordered by real name alphabetical order
+// some of these camera names have a different name than the 
+// "code name" used to fetch them from ALERTCalifornia API
+// actual name is commented inline
 const CAMERA_NAMES = [
     "AlabamaHills1",
     "AlabamaHills2",
@@ -5,8 +9,13 @@ const CAMERA_NAMES = [
     "Almaden1",
     "Almaden2",
     "AntelopeEagleLake1",
+    "BarnabeEast",
+    "BarnabeWest",
+    "Berkeley",
+    "BigRock",
     "BlackMtSCC",
     "BlackMtSCC2",
+    "Bolinas",
     "BonnyDoon",
     "BrionesTabletop",
     "BrionesRancho",
@@ -23,6 +32,7 @@ const CAMERA_NAMES = [
     "DreamInn1",
     "EagleRockLookout1",
     "EagleRockLookout2",
+    "EvoraRoad1",
     "FairviewAlameda1",
     "FairviewAlameda2",
     "FoothillsPark",
@@ -34,6 +44,9 @@ const CAMERA_NAMES = [
     "HolidayLake1",
     "HolidayLake2",
     "JasperRidge",
+    "Kregor",
+    "Dunsyre", // Lafayette Dunsyre Dr
+    "LafayetteLucas",
     "LaneHill",
     "LimekilnCanyon",
     "LomaPrieta",
@@ -49,7 +62,7 @@ const CAMERA_NAMES = [
     "MtAllison",
     "MtBielawski",
     "MtChaul",
-    "Diablo", // this is called Mt Diablo actually, but it is referred to as Diablo in ALERTCalifornia's API
+    "Diablo", // Mt Diablo
     "MtHamiltonSCC1",
     "MtHamiltonSCC2",
     "MtHamiltonSCC3",
@@ -62,8 +75,12 @@ const CAMERA_NAMES = [
     "PressonHill2",
     "RedwoodCity1",
     "RedwoodCity2",
+    "RockyRidge1",
+    "RoundTop",
+    "SanBrunoMtn1",
     "SanJoseFoothills",
-    "Weston1",
+    "SanPedro",
+    "Weston1", // Scotts Valley
     "SilverMountain1",
     "SRVFDStation31",
     "StanfordDish",
