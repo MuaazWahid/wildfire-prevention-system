@@ -225,15 +225,12 @@ body {
 /* Make camera containers clickable */
 .camera-container {
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.camera-container {
     position: relative;
     display: inline-block;
     margin: 1%;
     width: 30%;
-    display: inline-block;
     box-sizing: border-box;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 .camera-container:hover {
     transform: scale(1.05);
@@ -271,6 +268,11 @@ body {
     display: flex;
     flex-direction: column;
 }
+.fullscreen-camera-name {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
 .fullscreen-header {
     display: flex;
     justify-content: space-between;
@@ -278,11 +280,6 @@ body {
     padding: 15px 20px;
     background-color: #1a1a1a;
     border-bottom: 1px solid #444;
-}
-.fullscreen-camera-name {
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
 }
 .fullscreen-image {
     flex: 1;

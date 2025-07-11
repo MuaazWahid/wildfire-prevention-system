@@ -52,23 +52,21 @@ loginForm.addEventListener('submit', function(e) {
 function initializeMainApplication() {
     // save form elements to prevent repeated DOM queries
     const coordinatesDiv = document.getElementById('coordinates');
-    
     const addIotButton = document.getElementById('addIotButton')
     const addCameraButton = document.getElementById('addCameraButton');
     const cameraFeedsButton = document.getElementById('cameraFeedsButton');
     const logoutButton = document.getElementById('logoutButton');
-
     const customCameraThumbnailDiv = document.getElementById('customCameraThumbnail');
     const cameraFeedsDiv = document.getElementById('cameraFeeds');
     
-    // set leaflet map initial view (California, USA)
-    const map = L.map('map').setView([37.3587, -121.9276], 11);
     // save current user action so that we can update GUI dashboard accordingly
     let currentAction = null;
     let isFullscreen = false;
     let currentFullscreenCamera = null;
 
     // intitialize leaflet and add OpenStreetMap tiles
+    // set initial view to California, USA
+    const map = L.map('map').setView([37.3587, -121.9276], 11);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: `
         &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
@@ -188,7 +186,7 @@ function initializeMainApplication() {
         );
     }
 
-    // logic for displaying coordinates when user wants to add custom camera/iot on map
+    // displays coordinates while placing custom camera/iot on map
     function updateCoordinates(latLng) {
         coordinatesDiv.style.left = (map.latLngToContainerPoint(latLng).x + 10) + 'px';
         coordinatesDiv.style.top = (map.latLngToContainerPoint(latLng).y + 10) + 'px';
