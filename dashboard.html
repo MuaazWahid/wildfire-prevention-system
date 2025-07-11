@@ -66,20 +66,13 @@
                     RandomForest ML model, n_estimators=100<br>
                     likelihood of wildfire: 0.00%<br>
                 </p>
-                     
-                <!-- TEMPORARY FIX -->
-                <!-- TEMPORARY FIX -->
-                <!-- TEMPORARY FIX -->
-                <!-- dashboard-script.js is not updating this part correctly so this is a temp fix -->
+                <!-- this div should hold a custom camera and update every 60s but 
+                dashboard-script.js is not updating this part correctly so this is a temporary fix -->
+                <!--<div id="customCameraThumbnail" class="custom-camera-thumbnail"></div> -->
                 <div class="camera-container">
                     <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg">
                     <div class="camera-name">Mission1</div>
                 </div>
-                <!-- TEMPORARY FIX -->
-                <!-- TEMPORARY FIX -->
-                <!-- TEMPORARY FIX -->
-
-                <div id="customCameraThumbnail" class="custom-camera-thumbnail"></div>
             </div>
 
             <div class="temp-humid-sensor-table">
@@ -88,16 +81,12 @@
                     <tbody id="tempHumidSensorData"> </tbody>
                 </table>
             </div>
-
             <div class="gas-sensor-table">
                 <h2 style="color: white">Gas Sensor Readings</h2>
                 <table> <thead> <tr> <th>Timestamp</th> <th>Status</th> <th>Analog Value</th></tr> </thead>
                     <tbody id="gasSensorData"></tbody>
                 </table>
             </div>
-
-            <br>
-            <!-- break for formatting-->
             <div id="cameraFeeds" class="camera-feeds"></div>
         </div>
     </div>

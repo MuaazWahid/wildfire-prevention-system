@@ -30,13 +30,12 @@ function fetchCameraFeeds() {
     cameraFeedsDiv.innerHTML = imagesHtml;
 }
 
+// function to handle expanding a camera thumbnail
 function openFullscreen(cameraName) {
     if (isFullscreen) return; // prevent multiple fullscreen instances
-    
+
     isFullscreen = true;
     currentFullscreenCamera = cameraName;
-    
-    // Create fullscreen container
     const fullscreenContainer = document.createElement('div');
     fullscreenContainer.className = 'fullscreen-camera';
     fullscreenContainer.innerHTML = `
@@ -48,16 +47,14 @@ function openFullscreen(cameraName) {
              class="fullscreen-image" id="fullscreen-image">
     `;
     
-    // Hide thumbnail grid and show fullscreen
+    // hide thumbnail grid and show fullscreen
     const thumbnailContainers = document.querySelectorAll('.camera-container');
     thumbnailContainers.forEach(container => container.style.display = 'none');
-    
     cameraFeedsDiv.appendChild(fullscreenContainer);
-    
-    // Start updating the fullscreen image
     updateFullscreenImage();
 }
 
+// update full screen camera stream
 function updateFullscreenImage() {
     if (!isFullscreen || !currentFullscreenCamera) return;
     
@@ -67,23 +64,22 @@ function updateFullscreenImage() {
     }
 }
 
+// function to handle closing a fullscreen camera stream
 function closeFullscreen() {
     if (!isFullscreen) return;
     
     isFullscreen = false;
     currentFullscreenCamera = null;
-    
-    // Remove fullscreen container
+    // remove fullscreen container
     const fullscreenContainer = document.querySelector('.fullscreen-camera');
     if (fullscreenContainer) {
         fullscreenContainer.remove();
     }
-    
-    // Show all thumbnails again
+
+    // display all camera feeds
     const thumbnailContainers = document.querySelectorAll('.camera-container');
     thumbnailContainers.forEach(container => container.style.display = 'inline-block');
-    
-    // Refresh thumbnail feeds
+    // refresh feeds
     fetchCameraFeeds();
 }
 
@@ -101,7 +97,7 @@ document.getElementById('loginButton').addEventListener('click', function() {
     window.location.href = 'dashboard.html';
 });
 
-// click event listener for camera thumbnails
+// check if a camera thumbnail was clicked
 document.addEventListener('click', event => {
     const clicked = event.target;
     const cameraContainer = clicked.closest('.camera-container');
@@ -110,7 +106,7 @@ document.addEventListener('click', event => {
     }
 });
 
-// update cameras every 60 seconds
+// update camera thumbnails every 60 seconds
 fetchCameraFeeds();
 setInterval(() => {
     if (isFullscreen) {
