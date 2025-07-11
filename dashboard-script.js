@@ -1,5 +1,6 @@
-// user credentials
-const users = { 'user': 'pass', };
+// this script handles the main dashboard of the wildfire prevention system
+// it should start on a login screen and transition to the main dashboard
+
 // save form elements to prevent repeated DOM queries
 const loginForm = document.getElementById('loginForm');
 const currentUser = document.getElementById('currentUser');
@@ -10,19 +11,19 @@ const successMessageDiv = document.getElementById('successMessage');
 const loginContainerDiv = document.getElementById('loginContainer');
 const mainAppDiv = document.getElementById('mainApp');
 
-// handle form submission
+// display the login screen
 loginForm.addEventListener('submit', function(e) {
+    // dont reload page after sending login data
     e.preventDefault();
-    
     const username = usernameInput.value.trim().toLowerCase();
     const password = passwordInput.value.trim();
-    
-    // hide previous messages
+    // hide previous messages (if there were any)
     errorMessageDiv.style.display = 'none';
     successMessageDiv.style.display = 'none';
     
     // validate credentials
-    if (users[username] && users[username] === password) {
+    // check if username is valid, then check if password valid
+    if (username === 'user' && password === 'pass' ) {
         successMessageDiv.textContent = 'Welcome, ' + username + '! Loading dashboard...';
         successMessageDiv.style.display = 'block';
         
@@ -100,88 +101,6 @@ function initializeMainApplication() {
         cameraMarker.bindPopup('Camera @ ' + latLng.lat.toFixed(4) + ', ' + latLng.lng.toFixed(4)).openPopup();
     }
 
-    // logic for displaying coordinates when user wants to add custom camera/iot on map
-    function updateCoordinates(latLng) {
-        coordinatesDiv.style.left = (map.latLngToContainerPoint(latLng).x + 10) + 'px';
-        coordinatesDiv.style.top = (map.latLngToContainerPoint(latLng).y + 10) + 'px';
-        coordinatesDiv.innerText = 'Lat: ' + latLng.lat.toFixed(4) + ', Lon: ' + latLng.lng.toFixed(4);
-        coordinatesDiv.style.display = 'block';
-    }
-
-    // fetch camera custom camera feed
-    function fetchCustomCamera() {
-        customCameraThumbnailDiv.innerHTML = `
-        <div class="camera-container">
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${Date.now()}">
-            <div class="camera-name">Mission1</div>
-        </div>
-        `;
-    }
-    
-    // update camera feeds display
-    function fetchCameraFeeds() {
-        let imagesHtml = '';
-        CAMERA_NAMES.forEach(cameraName => {
-            imagesHtml += `
-                <div class="camera-container">
-                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
-                    <div class="camera-name">${cameraName}</div>
-                </div>
-            `;
-        });
-        cameraFeedsDiv.innerHTML = imagesHtml;
-    }
-
-    function openFullscreen(cameraName) {
-        if (isFullscreen) return; // prevent multiple fullscreen instances
-        isFullscreen = true;
-        currentFullscreenCamera = cameraName;
-        // create fullscreen container
-        const fullscreenContainer = document.createElement('div');
-        fullscreenContainer.className = 'fullscreen-camera';
-        fullscreenContainer.innerHTML = `
-            <div class="fullscreen-header">
-                <span class="fullscreen-camera-name">${cameraName}</span>
-                <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
-            </div>
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
-                class="fullscreen-image" id="fullscreen-image">
-        `;
-        
-        // hide thumbnail grid and show fullscreen
-        const thumbnailContainers = document.querySelectorAll('.camera-container');
-        thumbnailContainers.forEach(container => container.style.display = 'none');
-        cameraFeedsDiv.appendChild(fullscreenContainer);
-        
-        // update the fullscreen image
-        updateFullscreenImage();
-    }
-    function updateFullscreenImage() {
-        if (!isFullscreen || !currentFullscreenCamera) return;
-        
-        const fullscreenImage = document.getElementById('fullscreen-image');
-        if (fullscreenImage) {
-            fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
-        }
-    }
-    function closeFullscreen() {
-        if (!isFullscreen) return;
-        isFullscreen = false;
-        currentFullscreenCamera = null;
-        
-        // remove fullscreen container
-        const fullscreenContainer = document.querySelector('.fullscreen-camera');
-        if (fullscreenContainer) {
-            fullscreenContainer.remove();
-        }
-        
-        // show all thumbnails again
-        const thumbnailContainers = document.querySelectorAll('.camera-container');
-        thumbnailContainers.forEach(container => container.style.display = 'inline-block');
-        
-        // refresh thumbnail feeds
-        fetchCameraFeeds();
-    }
 
     // fetch and display sensor data
     function fetchSensorData(uri, tableId, parseRowFunction) {
@@ -269,6 +188,14 @@ function initializeMainApplication() {
         );
     }
 
+    // logic for displaying coordinates when user wants to add custom camera/iot on map
+    function updateCoordinates(latLng) {
+        coordinatesDiv.style.left = (map.latLngToContainerPoint(latLng).x + 10) + 'px';
+        coordinatesDiv.style.top = (map.latLngToContainerPoint(latLng).y + 10) + 'px';
+        coordinatesDiv.innerText = 'Lat: ' + latLng.lat.toFixed(4) + ', Lon: ' + latLng.lng.toFixed(4);
+        coordinatesDiv.style.display = 'block';
+    }
+
     // logic for clicking on add iot button
     addIotButton.addEventListener('click', function() {
         currentAction = 'iot';
@@ -299,16 +226,16 @@ function initializeMainApplication() {
         });
     });
 
-    // click event listener for camera thumbnails
-    document.addEventListener('click', event => {
-        const clicked = event.target;
-        const cameraContainer = clicked.closest('.camera-container');
-        if (cameraContainer && !isFullscreen) {
-            openFullscreen(cameraContainer.dataset.cameraName);
+    // logic for clicking on camera feeds button
+    cameraFeedsButton.addEventListener('click', function() {
+        if (cameraFeedsDiv.style.display === 'none' || cameraFeedsDiv.style.display === '') {
+            cameraFeedsDiv.style.display = 'block';
+        } else {
+            cameraFeedsDiv.style.display = 'none';
         }
     });
 
-    // logout button functionality
+    // logic for clicking on logout button
     logoutButton.addEventListener('click', function() {
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('loginTime');
@@ -320,6 +247,90 @@ function initializeMainApplication() {
         errorMessageDiv.style.display = 'none';
         successMessageDiv.style.display = 'none';
     });
+
+    // function to handle expanding a camera thumbnail
+    function openFullscreen(cameraName) {
+        if (isFullscreen) return; // prevent multiple fullscreen instances
+
+        isFullscreen = true;
+        currentFullscreenCamera = cameraName;
+        const fullscreenContainer = document.createElement('div');
+        fullscreenContainer.className = 'fullscreen-camera';
+        fullscreenContainer.innerHTML = `
+            <div class="fullscreen-header">
+                <span class="fullscreen-camera-name">${cameraName}</span>
+                <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
+            </div>
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
+                class="fullscreen-image" id="fullscreen-image">
+        `;
+        
+        // hide thumbnail grid and show fullscreen
+        const thumbnailContainers = document.querySelectorAll('.camera-container');
+        thumbnailContainers.forEach(container => container.style.display = 'none');
+        cameraFeedsDiv.appendChild(fullscreenContainer);
+        updateFullscreenImage();
+    }
+    
+    // update full screen camera stream
+    function updateFullscreenImage() {
+        if (!isFullscreen || !currentFullscreenCamera) return;
+        const fullscreenImage = document.getElementById('fullscreen-image');
+        if (fullscreenImage) {
+            fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
+        }
+    }
+
+    // function to handle closing a fullscreen camera stream
+    function closeFullscreen() {
+        if (!isFullscreen) return;
+
+        isFullscreen = false;
+        currentFullscreenCamera = null;
+        // remove fullscreen container
+        const fullscreenContainer = document.querySelector('.fullscreen-camera');
+        if (fullscreenContainer) {
+            fullscreenContainer.remove();
+        }
+        // display all camera feeds
+        const thumbnailContainers = document.querySelectorAll('.camera-container');
+        thumbnailContainers.forEach(container => container.style.display = 'inline-block');
+        // refresh feeds
+        fetchCameraFeeds();
+    }
+
+    // update camera feeds display
+    function fetchCameraFeeds() {
+        let imagesHtml = '';
+        CAMERA_NAMES.forEach(cameraName => {
+            imagesHtml += `
+                <div class="camera-container">
+                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
+                    <div class="camera-name">${cameraName}</div>
+                </div>
+            `;
+        });
+        cameraFeedsDiv.innerHTML = imagesHtml;
+    }
+    
+    // click event listener for camera thumbnails
+    document.addEventListener('click', event => {
+        const clicked = event.target;
+        const cameraContainer = clicked.closest('.camera-container');
+        if (cameraContainer && !isFullscreen) {
+            openFullscreen(cameraContainer.dataset.cameraName);
+        }
+    });
+
+    // fetch camera custom camera stream
+    function fetchCustomCamera() {
+        customCameraThumbnailDiv.innerHTML = `
+        <div class="camera-container">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${Date.now()}">
+            <div class="camera-name">Mission1</div>
+        </div>
+        `;
+    }
 
     // every 60 seconds update dashboard with:
     // - custom camera thumbnail
@@ -334,21 +345,8 @@ function initializeMainApplication() {
     setInterval(fetchGasSensorData, 60000);
     setInterval(fetchTempHumidSensorData, 60000);
     setInterval(fetchCameraFeeds, 60000);
-
-    // logic for clicking on camera feeds button
-    cameraFeedsButton.addEventListener('click', function() {
-        if (cameraFeedsDiv.style.display === 'none' || cameraFeedsDiv.style.display === '') {
-            cameraFeedsDiv.style.display = 'block';
-        } else {
-            cameraFeedsDiv.style.display = 'none';
-        }
-    });
-
-    // for some reason this is not working
-    // click on the cameraFeedsButton when the page loads so camera feeds are displayed by default when loading the site
-    document.addEventListener('DOMContentLoaded', function() {
-        cameraFeedsButton.click();
-    });
+    // display camera feeds on loading dashboard
+    cameraFeedsButton.click();
 }
 
 // auto-focus on username field

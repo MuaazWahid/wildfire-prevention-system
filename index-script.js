@@ -57,7 +57,6 @@ function openFullscreen(cameraName) {
 // update full screen camera stream
 function updateFullscreenImage() {
     if (!isFullscreen || !currentFullscreenCamera) return;
-    
     const fullscreenImage = document.getElementById('fullscreen-image');
     if (fullscreenImage) {
         fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
@@ -75,7 +74,6 @@ function closeFullscreen() {
     if (fullscreenContainer) {
         fullscreenContainer.remove();
     }
-
     // display all camera feeds
     const thumbnailContainers = document.querySelectorAll('.camera-container');
     thumbnailContainers.forEach(container => container.style.display = 'inline-block');
