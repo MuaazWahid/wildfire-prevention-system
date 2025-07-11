@@ -244,11 +244,13 @@ function initializeMainApplication() {
         fullscreenContainer.innerHTML = `
             <div class="fullscreen-header">
                 <span class="fullscreen-camera-name">${cameraName}</span>
-                <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
+                <button class="close-fullscreen">X</button>
             </div>
             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
                 class="fullscreen-image" id="fullscreen-image">
         `;
+        // link close full screen functionality with the X button
+        fullscreenContainer.querySelector('.close-fullscreen').addEventListener('click', closeFullscreen);
         
         // hide thumbnail grid and show fullscreen
         const thumbnailContainers = document.querySelectorAll('.camera-container');
@@ -289,7 +291,7 @@ function initializeMainApplication() {
         let imagesHtml = '';
         CAMERA_NAMES.forEach(cameraName => {
             imagesHtml += `
-                <div class="camera-container">
+                <div class="camera-container" data-camera-name="${cameraName}">
                     <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
                     <div class="camera-name">${cameraName}</div>
                 </div>
