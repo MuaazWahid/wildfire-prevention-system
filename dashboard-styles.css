@@ -218,7 +218,7 @@ body {
     display: none;
 }
 .camera-feeds img {
-    width: 90%;
+    width: 95%;
     height: auto;
     margin: 5px;
     border-radius: 4px;
@@ -252,9 +252,6 @@ body {
     font-size: 15px;
     border-radius: 0 4px 0 0;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 /* Fullscreen camera styles */

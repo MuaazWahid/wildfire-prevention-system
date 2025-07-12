@@ -18,6 +18,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // update camera feeds display
 function fetchCameraFeeds() {
+    closeFullscreen()
     let imagesHtml = '';
     CAMERA_NAMES.forEach(cameraName => {
         imagesHtml += `
@@ -43,24 +44,14 @@ function openFullscreen(cameraName) {
             <span class="fullscreen-camera-name">${cameraName}</span>
             <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
         </div>
-        <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
-             class="fullscreen-image" id="fullscreenImage">
+        <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-frame.jpg?t=${Date.now()}" 
+             class="fullscreen-image">
     `;
     
     // hide thumbnail grid and show fullscreen
     const thumbnailContainers = document.querySelectorAll('.camera-container');
     thumbnailContainers.forEach(container => container.style.display = 'none');
     cameraFeedsDiv.appendChild(fullscreenContainer);
-    updateFullscreenImage();
-}
-
-// update full screen camera stream
-function updateFullscreenImage() {
-    if (!isFullscreen || !currentFullscreenCamera) return;
-    const fullscreenImage = document.getElementById('fullscreenImage');
-    if (fullscreenImage) {
-        fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
-    }
 }
 
 // function to handle closing a fullscreen camera stream
@@ -77,9 +68,13 @@ function closeFullscreen() {
     // display all camera feeds
     const thumbnailContainers = document.querySelectorAll('.camera-container');
     thumbnailContainers.forEach(container => container.style.display = 'inline-block');
-    // refresh feeds
-    fetchCameraFeeds();
 }
+
+// login button redirect functionality
+document.getElementById('loginButton').addEventListener('click', function() {
+    window.location.href = 'dashboard.html';
+});
+
 
 // logic for clicking on camera feeds button
 cameraFeedsButton.addEventListener('click', function() {
@@ -88,11 +83,6 @@ cameraFeedsButton.addEventListener('click', function() {
     } else {
         cameraFeedsDiv.style.display = 'none';
     }
-});
-
-// login button redirect functionality
-document.getElementById('loginButton').addEventListener('click', function() {
-    window.location.href = 'dashboard.html';
 });
 
 // check if a camera thumbnail was clicked
@@ -105,16 +95,7 @@ document.addEventListener('click', event => {
 });
 
 // update camera thumbnails every 60 seconds
+setInterval(() => fetchCameraFeeds, 60000);
+// display camera feeds on loading site
 fetchCameraFeeds();
-setInterval(() => {
-    if (isFullscreen) {
-        updateFullscreenImage();
-    } else {
-        fetchCameraFeeds();
-    }
-}, 60000);
-
-// click on the cameraFeedsButton when the page loads so camera feeds are displayed by default when loading the site
-document.addEventListener('DOMContentLoaded', function() {
-    cameraFeedsButton.click();
-});
+cameraFeedsButton.click();

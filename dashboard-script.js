@@ -258,7 +258,7 @@ function initializeMainApplication() {
                 <button class="close-fullscreen">X</button>
             </div>
             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-frame.jpg?t=${Date.now()}" 
-                class="fullscreen-image" id="fullscreenImage">
+                class="fullscreen-image">
         `;
         // link close full screen functionality with the X button
         fullscreenContainer.querySelector('.close-fullscreen').addEventListener('click', closeFullscreen);
@@ -267,16 +267,6 @@ function initializeMainApplication() {
         const thumbnailContainers = document.querySelectorAll('.camera-container');
         thumbnailContainers.forEach(container => container.style.display = 'none');
         cameraFeedsDiv.appendChild(fullscreenContainer);
-        updateFullscreenImage();
-    }
-    
-    // update full screen camera stream
-    function updateFullscreenImage() {
-        if (!isFullscreen || !currentFullscreenCamera) return;
-        const fullscreenImage = document.getElementById('fullscreenImage');
-        if (fullscreenImage) {
-            fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-frame.jpg?t=${Date.now()}`;
-        }
     }
 
     // function to handle closing a fullscreen camera stream
@@ -297,6 +287,7 @@ function initializeMainApplication() {
 
     // update camera feeds display
     function fetchCameraFeeds() {
+        closeFullscreen();
         let imagesHtml = '';
         CAMERA_NAMES.forEach(cameraName => {
             imagesHtml += `
@@ -311,6 +302,7 @@ function initializeMainApplication() {
     
     // fetch camera custom camera stream
     function fetchCustomCamera() {
+        closeFullscreen();
         customCameraThumbnailDiv.innerHTML = `
         <div class="camera-container" data-camera-name="Mission1">
             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${Date.now()}">

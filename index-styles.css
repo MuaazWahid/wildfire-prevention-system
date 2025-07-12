@@ -23,22 +23,14 @@ body {
 .button-bar button {
     padding: 10px 20px;
     border: none;
+    background-color: #007bff;
     color: white;
     cursor: pointer;
     border-radius: 4px;
     margin-right: 5px;
 }
-.camera-feeds-button {
-    background: linear-gradient(90deg, #77d5ed 20%, #11cd46 100%);
-}
 .landing-page-header {
     background: linear-gradient(90deg, #ebb548 30%, #d01d0d 100%);
-}
-.feedback-button {
-    background: linear-gradient(90deg, #ebb548 30%, #d01d0d 100%);
-}
-.login-button {
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
 }
 
 /* leaflet map integration */
@@ -62,7 +54,7 @@ body {
     display: none;
 }
 .camera-feeds img {
-    width: 30%;
+    width: 95%;
     height: auto;
     margin: 5px;
     border-radius: 4px;
@@ -80,7 +72,6 @@ body {
 }
 .camera-container:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 .camera-container img {
     width: 100%;
@@ -97,14 +88,10 @@ body {
     font-size: 15px;
     border-radius: 0 4px 0 0;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 /* Fullscreen camera styles */
 .fullscreen-camera {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -125,12 +112,11 @@ body {
     align-items: center;
     padding: 15px 20px;
     background-color: #1a1a1a;
-    border-bottom: 1px solid #444;
 }
 .fullscreen-image {
     flex: 1;
     width: 100%;
-    height: calc(100% - 60px);
+    height: 100%;
     object-fit: contain;
     background-color: #000;
 }
