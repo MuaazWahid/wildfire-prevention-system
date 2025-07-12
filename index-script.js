@@ -44,7 +44,7 @@ function openFullscreen(cameraName) {
             <button class="close-fullscreen" onclick="closeFullscreen()">X</button>
         </div>
         <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
-             class="fullscreen-image" id="fullscreen-image">
+             class="fullscreen-image" id="fullscreenImage">
     `;
     
     // hide thumbnail grid and show fullscreen
@@ -57,7 +57,7 @@ function openFullscreen(cameraName) {
 // update full screen camera stream
 function updateFullscreenImage() {
     if (!isFullscreen || !currentFullscreenCamera) return;
-    const fullscreenImage = document.getElementById('fullscreen-image');
+    const fullscreenImage = document.getElementById('fullscreenImage');
     if (fullscreenImage) {
         fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
     }

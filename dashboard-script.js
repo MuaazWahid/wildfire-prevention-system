@@ -99,8 +99,7 @@ function initializeMainApplication() {
         cameraMarker.bindPopup('Camera @ ' + latLng.lat.toFixed(4) + ', ' + latLng.lng.toFixed(4)).openPopup();
     }
 
-
-    // fetch and display sensor data
+    // fetch and display sensor data on dashboard
     function fetchSensorData(uri, tableId, parseRowFunction) {
         // we are using a CORS proxy since browser will enforce CORS policy when executing javascript
         const PROXY_URL = 'https://api.allorigins.win/get?url=';
@@ -140,10 +139,10 @@ function initializeMainApplication() {
             .catch(error => console.error(`Error fetching ${tableId} data:`, error));
     }
 
-    // call fetch sensor function with params for gas sensor and update GUI with gasSensor data
+    // call fetch sensor function with params for gas sensor
     function fetchGasSensorData() {
         fetchSensorData(
-            // this website updates a mq2 (gas) sensor data every 60s in an html table format
+            // this website streams an mq2 sensor html table every 60s
             'https://hotprojects.cloud/sensor/index.php',
             'gasSensorData',
             (cells) => {
@@ -164,10 +163,9 @@ function initializeMainApplication() {
     }
 
     // call fetch sensor function with params for temperature & humidity sensor
-    // and update GUI with temperature and humidity data
     function fetchTempHumidSensorData() {
         fetchSensorData(
-            // this website updates a dht22 (temperature and humidity) sensor data every 60s in an html table format
+            // this website streams an dht22 sensor html table every 60s
             'https://hotprojects.cloud/sensor/dht22_dashboard.php',
             'tempHumidSensorData',
             (cells) => {
@@ -233,6 +231,19 @@ function initializeMainApplication() {
         }
     });
 
+    // logic for clicking on logout button
+    logoutButton.addEventListener('click', function() {
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('loginTime');
+        mainAppDiv.style.display = 'none';
+        loginContainerDiv.style.display = 'block';
+        // reset form
+        usernameInput.value = '';
+        passwordInput.value = '';
+        errorMessageDiv.style.display = 'none';
+        successMessageDiv.style.display = 'none';
+    });
+
     // function to handle expanding a camera thumbnail
     function openFullscreen(cameraName) {
         if (isFullscreen) return; // prevent multiple fullscreen instances
@@ -246,8 +257,8 @@ function initializeMainApplication() {
                 <span class="fullscreen-camera-name">${cameraName}</span>
                 <button class="close-fullscreen">X</button>
             </div>
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}" 
-                class="fullscreen-image" id="fullscreen-image">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-frame.jpg?t=${Date.now()}" 
+                class="fullscreen-image" id="fullscreenImage">
         `;
         // link close full screen functionality with the X button
         fullscreenContainer.querySelector('.close-fullscreen').addEventListener('click', closeFullscreen);
@@ -262,9 +273,9 @@ function initializeMainApplication() {
     // update full screen camera stream
     function updateFullscreenImage() {
         if (!isFullscreen || !currentFullscreenCamera) return;
-        const fullscreenImage = document.getElementById('fullscreen-image');
+        const fullscreenImage = document.getElementById('fullscreenImage');
         if (fullscreenImage) {
-            fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-thumb.jpg?t=${Date.now()}`;
+            fullscreenImage.src = `https://cameras.alertcalifornia.org/public-camera-data/Axis-${currentFullscreenCamera}/latest-frame.jpg?t=${Date.now()}`;
         }
     }
 
@@ -282,8 +293,6 @@ function initializeMainApplication() {
         // display all camera feeds
         const thumbnailContainers = document.querySelectorAll('.camera-container');
         thumbnailContainers.forEach(container => container.style.display = 'inline-block');
-        // refresh feeds
-        fetchCameraFeeds();
     }
 
     // update camera feeds display
@@ -291,16 +300,26 @@ function initializeMainApplication() {
         let imagesHtml = '';
         CAMERA_NAMES.forEach(cameraName => {
             imagesHtml += `
-                <div class="camera-container" data-camera-name="${cameraName}">
-                    <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
-                    <div class="camera-name">${cameraName}</div>
-                </div>
+            <div class="camera-container" data-camera-name="${cameraName}">
+                <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-thumb.jpg?t=${Date.now()}">
+                <div class="camera-name">${cameraName}</div>
+            </div>
             `;
         });
         cameraFeedsDiv.innerHTML = imagesHtml;
     }
     
-    // click event listener for camera thumbnails
+    // fetch camera custom camera stream
+    function fetchCustomCamera() {
+        customCameraThumbnailDiv.innerHTML = `
+        <div class="camera-container" data-camera-name="Mission1">
+            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${Date.now()}">
+            <div class="camera-name">Mission1</div>
+        </div>
+        `;
+    }
+
+    // logic to make a camera fullscreen if clicking on a camera thumbnail
     document.addEventListener('click', event => {
         const clicked = event.target;
         const cameraContainer = clicked.closest('.camera-container');
@@ -309,44 +328,18 @@ function initializeMainApplication() {
         }
     });
 
-    // fetch camera custom camera stream
-    function fetchCustomCamera() {
-        customCameraThumbnailDiv.innerHTML = `
-        <div class="camera-container">
-            <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-Mission1/latest-thumb.jpg?t=${Date.now()}">
-            <div class="camera-name">Mission1</div>
-        </div>
-        `;
-    }
-
-    // every 60 seconds update dashboard with:
-    // - custom camera thumbnail
-    // - gas sensor data
-    // - temperature and humidity sensor data
-    // - camera feeds
-    fetchCustomCamera();
-    fetchGasSensorData();
-    fetchTempHumidSensorData();
-    fetchCameraFeeds();
-    setInterval(fetchCustomCamera, 60000);
-    setInterval(fetchGasSensorData, 60000);
-    setInterval(fetchTempHumidSensorData, 60000);
-    setInterval(fetchCameraFeeds, 60000);
+    // list of functions to be updated every 60s
+    // and on initializing dashboard
+    const functionsToUpdate = [
+        fetchCustomCamera,
+        fetchGasSensorData,
+        fetchTempHumidSensorData,
+        fetchCameraFeeds
+    ];
+    functionsToUpdate.forEach(func => setInterval(func, 60000));
     // display camera feeds on loading dashboard
+    functionsToUpdate.forEach(func => func());
     cameraFeedsButton.click();
-
-    // logic for clicking on logout button
-    logoutButton.addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        sessionStorage.removeItem('loginTime');
-        mainAppDiv.style.display = 'none';
-        loginContainerDiv.style.display = 'block';
-        // reset form
-        usernameInput.value = '';
-        passwordInput.value = '';
-        errorMessageDiv.style.display = 'none';
-        successMessageDiv.style.display = 'none';
-    });
 }
 
 // auto-focus on username field

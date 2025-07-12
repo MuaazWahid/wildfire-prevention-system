@@ -159,8 +159,9 @@ body {
     box-sizing: border-box;
     overflow-y: auto;
 }
+
 .custom-camera-thumbnail {
-    display: none;
+    display: block;
 }
 .custom-camera-thumbnail img {
     width: 30%;
@@ -213,10 +214,11 @@ body {
 
 /* formatting ALERTCalifornia cameras */
 .camera-feeds {
+    /* this line does not seem to affect whether camera feeds display or dont */
     display: none;
 }
 .camera-feeds img {
-    width: 30%;
+    width: 90%;
     height: auto;
     margin: 5px;
     border-radius: 4px;
@@ -230,11 +232,10 @@ body {
     margin: 1%;
     width: 30%;
     box-sizing: border-box;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
 }
 .camera-container:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 .camera-container img {
     width: 100%;
@@ -258,7 +259,6 @@ body {
 
 /* Fullscreen camera styles */
 .fullscreen-camera {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -279,12 +279,11 @@ body {
     align-items: center;
     padding: 15px 20px;
     background-color: #1a1a1a;
-    border-bottom: 1px solid #444;
 }
 .fullscreen-image {
     flex: 1;
     width: 100%;
-    height: calc(100% - 60px);
+    height: 100%;
     object-fit: contain;
     background-color: #000;
 }
