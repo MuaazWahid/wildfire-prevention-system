@@ -337,7 +337,8 @@ function initializeMainApplication() {
     // try to chat with AI hosted on a server
     async function sendChatMessage(message) {
         // this is the ip address of the machine where the LLM model is hosted
-        const AI_SERVER_IP = 'http://IP_ADDRESS_GOES_HERE';
+        // https seems to be working better than http?
+        const AI_SERVER_IP = 'https://ipaddress';
         try {
             const response = await fetch(`${AI_SERVER_IP}/chat`, {
                 method: 'POST',
