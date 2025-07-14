@@ -55,6 +55,7 @@ function initializeMainApplication() {
     const addIotButton = document.getElementById('addIotButton')
     const addCameraButton = document.getElementById('addCameraButton');
     const cameraFeedsButton = document.getElementById('cameraFeedsButton');
+    const aiChatButton = document.getElementById('aiChatButton');
     const logoutButton = document.getElementById('logoutButton');
     const customCameraThumbnailDiv = document.getElementById('customCameraThumbnail');
     const cameraFeedsDiv = document.getElementById('cameraFeeds');
@@ -332,6 +333,36 @@ function initializeMainApplication() {
     // display camera feeds on loading dashboard
     functionsToUpdate.forEach(func => func());
     cameraFeedsButton.click();
+
+    // try to chat with AI hosted on a server
+    async function sendChatMessage(message) {
+        // this is the ip address of the machine where the LLM model is hosted
+        const AI_SERVER_IP = 'http://IP_ADDRESS_GOES_HERE';
+        try {
+            const response = await fetch(`${AI_SERVER_IP}/chat`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+            return data.response;
+        } catch (error) {
+            console.error('Chat error:', error);
+            return 'having trouble connecting to the AI assistant.';
+        }
+    }
+
+    aiChatButton.addEventListener('click', async () => {
+        console.log('aiChatButton clicked'); // This should show immediately
+        try {
+            const response = await sendChatMessage('hello');
+            console.log('AI response:', response);
+        } catch (error) {
+            console.error('Error in click handler:', error);
+        }
+    });
+
 }
 
 // auto-focus on username field
