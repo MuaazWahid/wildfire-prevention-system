@@ -261,7 +261,7 @@ function initializeMainApplication() {
             <img src="https://cameras.alertcalifornia.org/public-camera-data/Axis-${cameraName}/latest-frame.jpg?t=${Date.now()}" 
                 class="fullscreen-image">
         `;
-        // link close full screen functionality with the X button
+        // connect close full screen functionality with the X button
         fullscreenContainer.querySelector('.close-fullscreen').addEventListener('click', closeFullscreen);
         
         // hide thumbnail grid and show fullscreen
@@ -354,6 +354,8 @@ function initializeMainApplication() {
         }
     }
 
+    // clear the sidebar with a chat with genai model
+    // for now we are just sending a test prompt to the model
     aiChatButton.addEventListener('click', async () => {
         console.log('aiChatButton clicked'); // This should show immediately
         try {
@@ -363,7 +365,6 @@ function initializeMainApplication() {
             console.error('Error in click handler:', error);
         }
     });
-
 }
 
 // auto-focus on username field
