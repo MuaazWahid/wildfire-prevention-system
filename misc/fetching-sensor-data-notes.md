@@ -36,5 +36,3 @@ jsonpRequest('https://hotprojects.cloud/sensor/dht22_dashboard.php', function(da
     console.log(dht22Data.rows);
 });
 ```
-
-

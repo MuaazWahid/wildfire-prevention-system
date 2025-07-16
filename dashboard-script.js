@@ -334,11 +334,13 @@ function initializeMainApplication() {
     functionsToUpdate.forEach(func => func());
     cameraFeedsButton.click();
 
+    /**************************** genai testing code block ****************************/
     // try to chat with AI hosted on a server
     async function sendChatMessage(message) {
-        // this is the ip address of the machine where the LLM model is hosted
-        // https seems to be working better than http?
-        const AI_SERVER_IP = 'https://ipaddress';
+        // ip address of the machine where the LLM model is hosted
+        // not sure if http or https is better
+        //const AI_SERVER_IP = 'http://ipaddress1';
+		const AI_SERVER_IP = 'http://ipaddress2';
         try {
             const response = await fetch(`${AI_SERVER_IP}/chat`, {
                 method: 'POST',
@@ -365,6 +367,7 @@ function initializeMainApplication() {
             console.error('Error in click handler:', error);
         }
     });
+    /**************************** genai testing code block ****************************/
 }
 
 // auto-focus on username field
