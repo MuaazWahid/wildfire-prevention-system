@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
+    <!-- login screen -->
     <div class="login-container" id="loginContainer">
         <div class="login-header">
             <h1>Predictive Wildfire Prevention System</h1>
@@ -15,7 +16,6 @@
             <h1>🔥</h1>
             <p>AI-powered fire detection using California camera feeds with real-time monitoring and alert capabilities.</p>
         </div>
-        
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
@@ -29,7 +29,6 @@
             <div id="errorMessage" class="error-message"></div>
             <div id="successMessage" class="success-message"></div>
         </form>
-
         <div class="demo-users">
             <strong>Demo Accounts:</strong><br>
             username: user<br>
@@ -53,10 +52,12 @@
                 <button id="logoutButton" class="logout-button">Logout</button>
             </div>
         </div>
+
         <div id="map">
             <!-- coordinates for showing user where they place custom iot/camera -->
             <div id="coordinates" class="coordinates"></div>
         </div>
+
         <div class="sidebar">
             <!-- custom camera preview and ML image analysis -->
             <div id="cameraDeviceOverview" class="camera-device-overview">
