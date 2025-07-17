@@ -7,10 +7,10 @@ headers.append('Access-Control-Allow-Credentials', 'true');
 headers.append('GET', 'POST', 'OPTIONS');
 
 fetch('https://hotprojects.cloud/sensor/index.php', {
-  mode: 'no-cors',
-  credentials: 'include',
-  method: 'POST',
-  headers: headers
+    mode: 'no-cors',
+    credentials: 'include',
+    method: 'POST',
+    headers: headers
 })
 .then(response => response.json())
 .then(json => console.log(json))
@@ -28,14 +28,12 @@ fetch('https://hotprojects.cloud/sensor/index.php')
         // Parse the HTML using DOMParser
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-
         // Select the table containing sensor data
         const sensorTable = doc.querySelector('table');
         if (!sensorTable) {
             console.error("Table with sensor data not found.");
             return;
         }
-
         // Function to convert a row to an object
         function rowToObject(row) {
             const cells = row.getElementsByTagName('td');
@@ -44,7 +42,6 @@ fetch('https://hotprojects.cloud/sensor/index.php')
                 status: cells[1].textContent.trim(),
             };
         }
-
         // Extract last 4 rows
         const sensorDataRows = Array.from(sensorTable.querySelectorAll('tbody tr')).slice(-4).map(rowToObject);
         console.log('Sensor Data (last 4 entries):', sensorDataRows);
