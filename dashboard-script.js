@@ -361,8 +361,8 @@ function initializeMainApplication() {
     aiChatButton.addEventListener('click', async () => {
         console.log('aiChatButton clicked'); // This should show immediately
         try {
-            const response = await sendChatMessage('hello');
-            console.log('AI response:', response);
+            const response = await sendChatMessage('hi');
+            console.log('GenAI response:', response);
         } catch (error) {
             console.error('Error in click handler:', error);
         }
