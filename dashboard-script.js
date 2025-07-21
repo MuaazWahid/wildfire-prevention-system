@@ -338,108 +338,67 @@ function initializeMainApplication() {
 
     /**************************** genai testing code block ****************************/
     // function to send and receive messages (placeholder, to be filled)
-    // try to chat with AI hosted on a server
-    async function sendChatMessage(message) {
-        try {
-            const response = await fetch('http://<your-genai-server-url>/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ message: message })
-            });
-            const data = await response.json();
-            displayMessage(data.response, 'user');
-        } catch (error) {
-            console.error('Chat error:', error);
-            displayMessage('An error occurred while sending your message.', 'system');
-        }
-    }
-
-    // display messages in the chat interface
-    function displayMessage(message, sender) {
-        const messageElement = document.createElement('div');
-        messageElement.textContent = `${sender}: ${message}`;
-        chatMessages.appendChild(messageElement);
-        // scroll to the latest message
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
     aiChatButton.addEventListener('click', () => {
         const sidebar = document.querySelector('.sidebar');
+        const allSidebarChildren = sidebar.children;
         
-        // Toggle sidebar visibility
-        if (sidebar.style.display === 'none') {
-            // Show sidebar and hide chat UI
-            sidebar.style.display = 'block';
-            chatUI.style.display = 'none';
-            // Reset any inline styles
-            chatUI.style.position = '';
-            chatUI.style.top = '';
-            chatUI.style.right = '';
-            chatUI.style.width = '';
-            chatUI.style.height = '';
-            chatUI.style.zIndex = '';
+        if (chatUI.classList.contains('active')) {
+            // Show all other sidebar content and hide chat
+            chatUI.classList.remove('active');
+            for (let child of allSidebarChildren) {
+                if (child.id !== 'chatUi') {
+                    child.style.display = 'block';
+                }
+            }
         } else {
-            // Hide entire sidebar and show only chat UI
-            sidebar.style.display = 'none';
-            chatUI.style.display = 'flex';
-            chatUI.style.position = 'fixed';
-            chatUI.style.top = '60px';
-            chatUI.style.right = '0';
-            chatUI.style.width = '50%';
-            chatUI.style.height = 'calc(100vh - 60px)';
-            chatUI.style.padding = '20px';
-            chatUI.style.boxSizing = 'border-box';
-            chatUI.style.overflowY = 'auto';
-            chatUI.style.zIndex = '1000';
+            // Hide all other sidebar content and show chat
+            for (let child of allSidebarChildren) {
+                if (child.id !== 'chatUi') {
+                    child.style.display = 'none';
+                }
+            }
+            chatUI.classList.add('active');
             
-            // Initialize with welcome message
+            // Initialize with welcome message if empty
             if (chatMessages.children.length === 0) {
                 displayMessage('Hello! I\'m your AI assistant. How can I help you with wildfire prevention today?', 'ai');
             }
-        }
-        
-        // Focus chat input field when showing chat
-        if (chatUI.style.display === 'flex') {
-            setTimeout(() => chatInput.focus(), 100);
             
-            // Set up enter key handler
-            const handleEnter = (event) => {
-                if (event.key === 'Enter' && chatInput.value.trim()) {
-                    const userMessage = chatInput.value.trim();
-                    displayMessage(userMessage, 'user');
-                    sendChatMessage(userMessage);
-                    chatInput.value = '';
-                }
-            };
-            
-            // Remove existing listener and add new one
-            chatInput.removeEventListener('keydown', handleEnter);
-            chatInput.addEventListener('keydown', handleEnter);
+            setTimeout(() => {
+                chatInput.focus();
+            }, 100);
         }
     });
 
-    // Updated displayMessage function with better styling
+    // Add the enter key handler OUTSIDE of the button click handler, right after the aiChatButton event listener:
+    chatInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && chatInput.value.trim()) {
+            const userMessage = chatInput.value.trim();
+            displayMessage(userMessage, 'user');
+            sendChatMessage(userMessage);
+            chatInput.value = '';
+        }
+    });
+
+    // Make sure these functions are also updated if not already done:
+
     function displayMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.className = `chat-message ${sender}`;
         
-        // Add sender label and message
         const senderLabel = sender === 'user' ? 'You' : sender === 'ai' ? 'AI Assistant' : 'System';
         messageElement.innerHTML = `<strong>${senderLabel}:</strong> ${message}`;
         
         chatMessages.appendChild(messageElement);
-        
-        // Scroll to the latest message
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Updated sendChatMessage function with placeholder response
     async function sendChatMessage(message) {
         try {
             // Show typing indicator
             displayMessage('Thinking...', 'system');
             
-            // Simulate API call delay
+            // Simulate API response
             setTimeout(() => {
                 // Remove typing indicator
                 const systemMessages = chatMessages.querySelectorAll('.chat-message.system');
@@ -448,28 +407,18 @@ function initializeMainApplication() {
                     lastSystemMessage.remove();
                 }
                 
-                // Placeholder responses for testing
+                // Placeholder responses
                 const responses = [
                     "I understand you're asking about wildfire prevention. Based on the current sensor data, conditions appear normal.",
                     "The temperature and humidity sensors show readings within safe ranges. Gas sensors indicate no immediate fire risk.",
                     "I recommend monitoring the camera feeds for any visual signs of smoke or unusual activity.",
-                    "Current weather conditions and sensor readings suggest low fire risk in the monitored areas."
+                    "Current weather conditions and sensor readings suggest low fire risk in the monitored areas.",
+                    "Would you like me to analyze specific camera feeds or sensor readings in more detail?"
                 ];
                 
                 const randomResponse = responses[Math.floor(Math.random() * responses.length)];
                 displayMessage(randomResponse, 'ai');
             }, 1500);
-            
-            // Uncomment below when you have your AI server ready:
-            /*
-            const response = await fetch('http://<your-genai-server-url>/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ message: message })
-            });
-            const data = await response.json();
-            displayMessage(data.response, 'ai');
-            */
             
         } catch (error) {
             console.error('Chat error:', error);
