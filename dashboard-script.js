@@ -395,24 +395,64 @@ function initializeMainApplication() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // logic for clicking on GenAI chat button (LLM)
+    // Replace your existing aiChatButton event listener with this:
     aiChatButton.addEventListener('click', () => {
-        // toggle display of chat interface
-        chatUI.style.display = chatUI.style.display === 'none' ? 'block' : 'none';
-        // // maybe clear previous messages
-        // chatMessages.innerHTML = '';
-        // focus chat input field
-        chatInput.focus();
-        // ask user to prompt the LLM
-        chatInput.removeEventListener('keydown', handleEnter);
-        chatInput.addEventListener('keydown', handleEnter);
-        function handleEnter(event) {
-            if (event.key === 'Enter') {
-                sendChatMessage(chatInput.value);
-                chatInput.value = '';
+        const sidebar = document.querySelector('.sidebar');
+        
+        // Toggle sidebar visibility
+        if (sidebar.style.display === 'none') {
+            // Show sidebar and hide chat UI
+            sidebar.style.display = 'block';
+            chatUI.style.display = 'none';
+        } else {
+            // Hide entire sidebar and show only chat UI
+            sidebar.style.display = 'none';
+            chatUI.style.display = 'block';
+            chatUI.style.position = 'fixed';
+            chatUI.style.top = '60px'; // Account for button bar height
+            chatUI.style.right = '0';
+            chatUI.style.width = '50%';
+            chatUI.style.height = 'calc(100vh - 60px)';
+            chatUI.style.backgroundColor = '#3d3d40';
+            chatUI.style.padding = '10px';
+            chatUI.style.boxSizing = 'border-box';
+            chatUI.style.overflowY = 'auto';
+            chatUI.style.zIndex = '1000';
+        }
+        
+        // Focus chat input field when showing chat
+        if (chatUI.style.display === 'block') {
+            chatInput.focus();
+            // Set up enter key handler
+            chatInput.removeEventListener('keydown', handleEnter);
+            chatInput.addEventListener('keydown', handleEnter);
+            function handleEnter(event) {
+                if (event.key === 'Enter') {
+                    sendChatMessage(chatInput.value);
+                    chatInput.value = '';
+                }
             }
         }
     });
+
+    // // logic for clicking on GenAI chat button (LLM)
+    // aiChatButton.addEventListener('click', () => {
+    //     // toggle display of chat interface
+    //     chatUI.style.display = chatUI.style.display === 'none' ? 'block' : 'none';
+    //     // // maybe clear previous messages
+    //     // chatMessages.innerHTML = '';
+    //     // focus chat input field
+    //     chatInput.focus();
+    //     // ask user to prompt the LLM
+    //     chatInput.removeEventListener('keydown', handleEnter);
+    //     chatInput.addEventListener('keydown', handleEnter);
+    //     function handleEnter(event) {
+    //         if (event.key === 'Enter') {
+    //             sendChatMessage(chatInput.value);
+    //             chatInput.value = '';
+    //         }
+    //     }
+    // });
     /**************************** genai testing code block ****************************/
 }
 
