@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- login screen -->
-    <div class="login-container" id="loginContainer">
+    <div id="loginContainer" class="login-container">
         <div class="login-header">
             <h1>Predictive Wildfire Prevention System</h1>
             <p>Secure Access Portal</p>
@@ -24,7 +24,7 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
-            </div>
+            </div
             <button type="submit" class="login-btn">Login</button>
             <div id="errorMessage" class="error-message"></div>
             <div id="successMessage" class="success-message"></div>
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="main-app" id="mainApp">
+    <div id="mainApp" class="main-app">
         <div class="button-bar">
             <div>
                 <button id="addIotButton">Add IoT</button>
@@ -68,6 +68,12 @@
                     likelihood of wildfire: 0.00%<br>
                 </p>
                 <div id="customCameraThumbnail" class="custom-camera-thumbnail"></div>
+            </div>
+            
+            <div id="chatUi" class="chat-ui" style="display: none; color: white">
+                <h2>AI Chat</h2>
+                <div id="chatMessages"></div>
+                <input type="text" id="chatInput" placeholder="Type your message..." />
             </div>
 
             <div class="temp-humid-sensor-table">

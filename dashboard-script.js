@@ -59,7 +59,10 @@ function initializeMainApplication() {
     const logoutButton = document.getElementById('logoutButton');
     const customCameraThumbnailDiv = document.getElementById('customCameraThumbnail');
     const cameraFeedsDiv = document.getElementById('cameraFeeds');
-    
+    // initialize chat UI
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatUI = document.getElementById('chatUi');
     // save current user action so that we can update GUI dashboard accordingly
     let currentAction = null;
     let isFullscreen = false;
@@ -321,8 +324,7 @@ function initializeMainApplication() {
         }
     });
 
-    // list of functions to be updated every 60s
-    // and on initializing dashboard
+    // list of functions to be updated every 60s and on initializing dashboard
     const functionsToUpdate = [
         fetchCustomCamera,
         fetchGasSensorData,
@@ -335,36 +337,80 @@ function initializeMainApplication() {
     cameraFeedsButton.click();
 
     /**************************** genai testing code block ****************************/
-    // try to chat with AI hosted on a server
+    // // try to chat with AI hosted on a server
+    // async function sendChatMessage(message) {
+    //     // ip address of the machine where the LLM model is hosted
+    //     // not sure if http or https is better
+    //     //const AI_SERVER_IP = 'http://ipaddress1';
+	// 	const AI_SERVER_IP = 'http://ipaddress2';
+    //     try {
+    //         const response = await fetch(`${AI_SERVER_IP}/chat`, {
+    //             method: 'POST',
+    //             headers: {'Content-Type': 'application/json'},
+    //             body: JSON.stringify({ message: message })
+    //         });
+            
+    //         const data = await response.json();
+    //         return data.response;
+    //     } catch (error) {
+    //         console.error('Chat error:', error);
+    //         return 'having trouble connecting to the AI assistant.';
+    //     }
+    // }
+
+    // // clear the sidebar with a chat with genai model
+    // // for now we are just sending a test prompt to the model
+    // aiChatButton.addEventListener('click', async () => {
+    //     console.log('aiChatButton clicked'); // This should show immediately
+    //     try {
+    //         const response = await sendChatMessage('hi');
+    //         console.log('GenAI response:', response);
+    //     } catch (error) {
+    //         console.error('Error in click handler:', error);
+    //     }
+    // });
+
+    // function to send and receive messages (placeholder, to be filled)
     async function sendChatMessage(message) {
-        // ip address of the machine where the LLM model is hosted
-        // not sure if http or https is better
-        //const AI_SERVER_IP = 'http://ipaddress1';
-		const AI_SERVER_IP = 'http://ipaddress2';
         try {
-            const response = await fetch(`${AI_SERVER_IP}/chat`, {
+            const response = await fetch('http://<your-genai-server-url>/chat', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ message: message })
             });
-            
             const data = await response.json();
-            return data.response;
+            displayMessage(data.response, 'user');
         } catch (error) {
             console.error('Chat error:', error);
-            return 'having trouble connecting to the AI assistant.';
+            displayMessage('An error occurred while sending your message.', 'system');
         }
     }
 
-    // clear the sidebar with a chat with genai model
-    // for now we are just sending a test prompt to the model
-    aiChatButton.addEventListener('click', async () => {
-        console.log('aiChatButton clicked'); // This should show immediately
-        try {
-            const response = await sendChatMessage('hi');
-            console.log('GenAI response:', response);
-        } catch (error) {
-            console.error('Error in click handler:', error);
+    // display messages in the chat interface
+    function displayMessage(message, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `${sender}: ${message}`;
+        chatMessages.appendChild(messageElement);
+        // scroll to the latest message
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // logic for clicking on GenAI chat button (LLM)
+    aiChatButton.addEventListener('click', () => {
+        // toggle display of chat interface
+        chatUI.style.display = chatUI.style.display === 'none' ? 'block' : 'none';
+        // // maybe clear previous messages
+        // chatMessages.innerHTML = '';
+        // focus chat input field
+        chatInput.focus();
+        // ask user to prompt the LLM
+        chatInput.removeEventListener('keydown', handleEnter);
+        chatInput.addEventListener('keydown', handleEnter);
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage(chatInput.value);
+                chatInput.value = '';
+            }
         }
     });
     /**************************** genai testing code block ****************************/
