@@ -337,40 +337,8 @@ function initializeMainApplication() {
     cameraFeedsButton.click();
 
     /**************************** genai testing code block ****************************/
-    // // try to chat with AI hosted on a server
-    // async function sendChatMessage(message) {
-    //     // ip address of the machine where the LLM model is hosted
-    //     // not sure if http or https is better
-    //     //const AI_SERVER_IP = 'http://ipaddress1';
-	// 	const AI_SERVER_IP = 'http://ipaddress2';
-    //     try {
-    //         const response = await fetch(`${AI_SERVER_IP}/chat`, {
-    //             method: 'POST',
-    //             headers: {'Content-Type': 'application/json'},
-    //             body: JSON.stringify({ message: message })
-    //         });
-            
-    //         const data = await response.json();
-    //         return data.response;
-    //     } catch (error) {
-    //         console.error('Chat error:', error);
-    //         return 'having trouble connecting to the AI assistant.';
-    //     }
-    // }
-
-    // // clear the sidebar with a chat with genai model
-    // // for now we are just sending a test prompt to the model
-    // aiChatButton.addEventListener('click', async () => {
-    //     console.log('aiChatButton clicked'); // This should show immediately
-    //     try {
-    //         const response = await sendChatMessage('hi');
-    //         console.log('GenAI response:', response);
-    //     } catch (error) {
-    //         console.error('Error in click handler:', error);
-    //     }
-    // });
-
     // function to send and receive messages (placeholder, to be filled)
+    // try to chat with AI hosted on a server
     async function sendChatMessage(message) {
         try {
             const response = await fetch('http://<your-genai-server-url>/chat', {
@@ -395,7 +363,6 @@ function initializeMainApplication() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Replace your existing aiChatButton event listener with this:
     aiChatButton.addEventListener('click', () => {
         const sidebar = document.querySelector('.sidebar');
         
@@ -404,55 +371,111 @@ function initializeMainApplication() {
             // Show sidebar and hide chat UI
             sidebar.style.display = 'block';
             chatUI.style.display = 'none';
+            // Reset any inline styles
+            chatUI.style.position = '';
+            chatUI.style.top = '';
+            chatUI.style.right = '';
+            chatUI.style.width = '';
+            chatUI.style.height = '';
+            chatUI.style.zIndex = '';
         } else {
             // Hide entire sidebar and show only chat UI
             sidebar.style.display = 'none';
-            chatUI.style.display = 'block';
+            chatUI.style.display = 'flex';
             chatUI.style.position = 'fixed';
-            chatUI.style.top = '60px'; // Account for button bar height
+            chatUI.style.top = '60px';
             chatUI.style.right = '0';
             chatUI.style.width = '50%';
             chatUI.style.height = 'calc(100vh - 60px)';
-            chatUI.style.backgroundColor = '#3d3d40';
-            chatUI.style.padding = '10px';
+            chatUI.style.padding = '20px';
             chatUI.style.boxSizing = 'border-box';
             chatUI.style.overflowY = 'auto';
             chatUI.style.zIndex = '1000';
+            
+            // Initialize with welcome message
+            if (chatMessages.children.length === 0) {
+                displayMessage('Hello! I\'m your AI assistant. How can I help you with wildfire prevention today?', 'ai');
+            }
         }
         
         // Focus chat input field when showing chat
-        if (chatUI.style.display === 'block') {
-            chatInput.focus();
+        if (chatUI.style.display === 'flex') {
+            setTimeout(() => chatInput.focus(), 100);
+            
             // Set up enter key handler
-            chatInput.removeEventListener('keydown', handleEnter);
-            chatInput.addEventListener('keydown', handleEnter);
-            function handleEnter(event) {
-                if (event.key === 'Enter') {
-                    sendChatMessage(chatInput.value);
+            const handleEnter = (event) => {
+                if (event.key === 'Enter' && chatInput.value.trim()) {
+                    const userMessage = chatInput.value.trim();
+                    displayMessage(userMessage, 'user');
+                    sendChatMessage(userMessage);
                     chatInput.value = '';
                 }
-            }
+            };
+            
+            // Remove existing listener and add new one
+            chatInput.removeEventListener('keydown', handleEnter);
+            chatInput.addEventListener('keydown', handleEnter);
         }
     });
 
-    // // logic for clicking on GenAI chat button (LLM)
-    // aiChatButton.addEventListener('click', () => {
-    //     // toggle display of chat interface
-    //     chatUI.style.display = chatUI.style.display === 'none' ? 'block' : 'none';
-    //     // // maybe clear previous messages
-    //     // chatMessages.innerHTML = '';
-    //     // focus chat input field
-    //     chatInput.focus();
-    //     // ask user to prompt the LLM
-    //     chatInput.removeEventListener('keydown', handleEnter);
-    //     chatInput.addEventListener('keydown', handleEnter);
-    //     function handleEnter(event) {
-    //         if (event.key === 'Enter') {
-    //             sendChatMessage(chatInput.value);
-    //             chatInput.value = '';
-    //         }
-    //     }
-    // });
+    // Updated displayMessage function with better styling
+    function displayMessage(message, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.className = `chat-message ${sender}`;
+        
+        // Add sender label and message
+        const senderLabel = sender === 'user' ? 'You' : sender === 'ai' ? 'AI Assistant' : 'System';
+        messageElement.innerHTML = `<strong>${senderLabel}:</strong> ${message}`;
+        
+        chatMessages.appendChild(messageElement);
+        
+        // Scroll to the latest message
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Updated sendChatMessage function with placeholder response
+    async function sendChatMessage(message) {
+        try {
+            // Show typing indicator
+            displayMessage('Thinking...', 'system');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Remove typing indicator
+                const systemMessages = chatMessages.querySelectorAll('.chat-message.system');
+                const lastSystemMessage = systemMessages[systemMessages.length - 1];
+                if (lastSystemMessage && lastSystemMessage.textContent.includes('Thinking...')) {
+                    lastSystemMessage.remove();
+                }
+                
+                // Placeholder responses for testing
+                const responses = [
+                    "I understand you're asking about wildfire prevention. Based on the current sensor data, conditions appear normal.",
+                    "The temperature and humidity sensors show readings within safe ranges. Gas sensors indicate no immediate fire risk.",
+                    "I recommend monitoring the camera feeds for any visual signs of smoke or unusual activity.",
+                    "Current weather conditions and sensor readings suggest low fire risk in the monitored areas."
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                displayMessage(randomResponse, 'ai');
+            }, 1500);
+            
+            // Uncomment below when you have your AI server ready:
+            /*
+            const response = await fetch('http://<your-genai-server-url>/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+            displayMessage(data.response, 'ai');
+            */
+            
+        } catch (error) {
+            console.error('Chat error:', error);
+            displayMessage('Sorry, I\'m having trouble connecting right now. Please try again later.', 'system');
+        }
+    }
     /**************************** genai testing code block ****************************/
 }
 
