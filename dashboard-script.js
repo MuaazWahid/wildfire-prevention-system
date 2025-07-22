@@ -343,7 +343,7 @@ function initializeMainApplication() {
         const allSidebarChildren = sidebar.children;
         
         if (chatUI.classList.contains('active')) {
-            // Show all other sidebar content and hide chat
+            // show all other sidebar content and hide chat
             chatUI.classList.remove('active');
             for (let child of allSidebarChildren) {
                 if (child.id !== 'chatUi') {
@@ -351,7 +351,7 @@ function initializeMainApplication() {
                 }
             }
         } else {
-            // Hide all other sidebar content and show chat
+            // hide all other sidebar content and show chat
             for (let child of allSidebarChildren) {
                 if (child.id !== 'chatUi') {
                     child.style.display = 'none';
@@ -359,7 +359,7 @@ function initializeMainApplication() {
             }
             chatUI.classList.add('active');
             
-            // Initialize with welcome message if empty
+            // initialize with welcome message if empty
             if (chatMessages.children.length === 0) {
                 displayMessage('Hello! I\'m your AI assistant. How can I help you with wildfire prevention today?', 'ai');
             }
@@ -370,7 +370,7 @@ function initializeMainApplication() {
         }
     });
 
-    // Add the enter key handler OUTSIDE of the button click handler, right after the aiChatButton event listener:
+    // add the enter key handler OUTSIDE of the button click handler, right after the aiChatButton event listener:
     chatInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && chatInput.value.trim()) {
             const userMessage = chatInput.value.trim();
@@ -380,8 +380,7 @@ function initializeMainApplication() {
         }
     });
 
-    // Make sure these functions are also updated if not already done:
-
+    // make sure these functions are also updated if not already done:
     function displayMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.className = `chat-message ${sender}`;
@@ -395,19 +394,19 @@ function initializeMainApplication() {
 
     async function sendChatMessage(message) {
         try {
-            // Show typing indicator
+            // show typing indicator
             displayMessage('Thinking...', 'system');
             
-            // Simulate API response
+            // simulate API response
             setTimeout(() => {
-                // Remove typing indicator
+                // remove typing indicator
                 const systemMessages = chatMessages.querySelectorAll('.chat-message.system');
                 const lastSystemMessage = systemMessages[systemMessages.length - 1];
                 if (lastSystemMessage && lastSystemMessage.textContent.includes('Thinking...')) {
                     lastSystemMessage.remove();
                 }
                 
-                // Placeholder responses
+                // placeholder responses
                 const responses = [
                     "I understand you're asking about wildfire prevention. Based on the current sensor data, conditions appear normal.",
                     "The temperature and humidity sensors show readings within safe ranges. Gas sensors indicate no immediate fire risk.",
