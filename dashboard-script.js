@@ -359,7 +359,7 @@ function initializeMainApplication() {
             }
             chatUI.classList.add('active');
             
-            // initialize with welcome message if empty
+            // if chat empty, give welcome message
             if (chatMessages.children.length === 0) {
                 displayMessage('Hello! I\'m your AI assistant. How can I help you with wildfire prevention today?', 'ai');
             }
@@ -370,7 +370,7 @@ function initializeMainApplication() {
         }
     });
 
-    // add the enter key handler OUTSIDE of the button click handler, right after the aiChatButton event listener:
+    // add the enter key handler outside of the button click handler, right after the aiChatButton event listener:
     chatInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && chatInput.value.trim()) {
             const userMessage = chatInput.value.trim();
@@ -384,44 +384,64 @@ function initializeMainApplication() {
     function displayMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.className = `chat-message ${sender}`;
-        
         const senderLabel = sender === 'user' ? 'You' : sender === 'ai' ? 'AI Assistant' : 'System';
         messageElement.innerHTML = `<strong>${senderLabel}:</strong> ${message}`;
-        
         chatMessages.appendChild(messageElement);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     async function sendChatMessage(message) {
         try {
-            // show typing indicator
             displayMessage('Thinking...', 'system');
+            // ollama API endpoint
+            const response = await fetch('http://localhost:11434/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: "granite3.1-moe:1b",
+                    prompt: `You are a wildfire prevention AI assistant.
+                    You help analyze sensor data, camera feeds, and provide guidance on fire prevention and safety.
+                    Current context: The user is monitoring wildfire conditions through various sensors and camera feeds.
+
+User question: ${message}
+
+Response:`,
+                    stream: false,
+                    // can reduce num_predict or adjust temperature for faster or more focused responses
+                    options: {
+                        temperature: 0.7,
+                        num_predict: 200
+                    }
+                })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
             
-            // simulate API response
-            setTimeout(() => {
-                // remove typing indicator
-                const systemMessages = chatMessages.querySelectorAll('.chat-message.system');
-                const lastSystemMessage = systemMessages[systemMessages.length - 1];
-                if (lastSystemMessage && lastSystemMessage.textContent.includes('Thinking...')) {
-                    lastSystemMessage.remove();
-                }
-                
-                // placeholder responses
-                const responses = [
-                    "I understand you're asking about wildfire prevention. Based on the current sensor data, conditions appear normal.",
-                    "The temperature and humidity sensors show readings within safe ranges. Gas sensors indicate no immediate fire risk.",
-                    "I recommend monitoring the camera feeds for any visual signs of smoke or unusual activity.",
-                    "Current weather conditions and sensor readings suggest low fire risk in the monitored areas.",
-                    "Would you like me to analyze specific camera feeds or sensor readings in more detail?"
-                ];
-                
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                displayMessage(randomResponse, 'ai');
-            }, 1500);
+            // remove thinking indicator and output response
+            const systemMessages = chatMessages.querySelectorAll('.chat-message.system');
+            const lastSystemMessage = systemMessages[systemMessages.length - 1];
+            if (lastSystemMessage && lastSystemMessage.textContent.includes('Thinking...')) {
+                lastSystemMessage.remove();
+            }
+            displayMessage(data.response || 'No response received', 'ai');
             
         } catch (error) {
-            console.error('Chat error:', error);
-            displayMessage('Sorry, I\'m having trouble connecting right now. Please try again later.', 'system');
+            // remove thinking indicator
+            const systemMessages = chatMessages.querySelectorAll('.chat-message.system');
+            const lastSystemMessage = systemMessages[systemMessages.length - 1];
+            if (lastSystemMessage && lastSystemMessage.textContent.includes('Thinking...')) {
+                lastSystemMessage.remove();
+            }
+            // check if CORS error
+            if (error.message.includes('fetch')) {
+                displayMessage('Connection error: Make sure Ollama is running and CORS is enabled.', 'system');
+            } else {
+                displayMessage('Sorry, im having trouble connecting to the AI service. Please try again.', 'system');
+            }
         }
     }
     /**************************** genai testing code block ****************************/
