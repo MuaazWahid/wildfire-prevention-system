@@ -342,16 +342,15 @@ function initializeMainApplication() {
         const sidebar = document.querySelector('.sidebar');
         const allSidebarChildren = sidebar.children;
         
+        // show all other sidebar content and hide chat
         if (chatUI.classList.contains('active')) {
-            // show all other sidebar content and hide chat
             chatUI.classList.remove('active');
             for (let child of allSidebarChildren) {
                 if (child.id !== 'chatUi') {
                     child.style.display = 'block';
                 }
             }
-        } else {
-            // hide all other sidebar content and show chat
+        } else { // hide all other sidebar content and show chat
             for (let child of allSidebarChildren) {
                 if (child.id !== 'chatUi') {
                     child.style.display = 'none';
@@ -361,7 +360,7 @@ function initializeMainApplication() {
             
             // if chat empty, give welcome message
             if (chatMessages.children.length === 0) {
-                displayMessage('Hello! I\'m your AI assistant. How can I help you with wildfire prevention today?', 'ai');
+                displayMessage('Hello! How can I help you with wildfire prevention today?', 'ai');
             }
             
             setTimeout(() => {
@@ -370,7 +369,7 @@ function initializeMainApplication() {
         }
     });
 
-    // add the enter key handler outside of the button click handler, right after the aiChatButton event listener:
+	// when user presses enter on text input box update chat UI and send prompt to LLM
     chatInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && chatInput.value.trim()) {
             const userMessage = chatInput.value.trim();
@@ -380,7 +379,6 @@ function initializeMainApplication() {
         }
     });
 
-    // make sure these functions are also updated if not already done:
     function displayMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.className = `chat-message ${sender}`;
@@ -436,7 +434,7 @@ Response:`,
             if (lastSystemMessage && lastSystemMessage.textContent.includes('Thinking...')) {
                 lastSystemMessage.remove();
             }
-            // check if CORS error
+            // check if message failed to reach llm due to CORS error
             if (error.message.includes('fetch')) {
                 displayMessage('Connection error: Make sure Ollama is running and CORS is enabled.', 'system');
             } else {
