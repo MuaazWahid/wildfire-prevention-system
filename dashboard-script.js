@@ -360,7 +360,7 @@ function initializeMainApplication() {
             
             // if chat empty, give welcome message
             if (chatMessages.children.length === 0) {
-                displayMessage('Hello! How can I help you with wildfire prevention today?', 'ai');
+                displayMessage('Hello! I am an AI assistant that can provide insights on sensor & camera data!', 'ai');
             }
             
             setTimeout(() => {
@@ -382,9 +382,23 @@ function initializeMainApplication() {
     function displayMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.className = `chat-message ${sender}`;
-        const senderLabel = sender === 'user' ? 'You' : sender === 'ai' ? 'AI Assistant' : 'System';
+        
+        // format and color output for readability
+        const senderStyles = {
+            user: { label: 'You', color: 'lightgreen' },
+            ai: { label: 'AI Assistant', color: 'deepskyblue' },
+            system: { label: 'System', color: 'white' }
+        };
+        const senderInfo = senderStyles[sender] || senderStyles.system;
+        const senderLabel = `<span style="color: ${senderInfo.color};">${senderInfo.label}</span>`;
         messageElement.innerHTML = `<strong>${senderLabel}:</strong> ${message}`;
         chatMessages.appendChild(messageElement);
+        
+        // blank line for spacing
+        const spacerElement = document.createElement('div');
+        spacerElement.style.height = '5px';
+        chatMessages.appendChild(spacerElement);
+        // scroll as new chat messages are added
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
@@ -400,7 +414,7 @@ function initializeMainApplication() {
                 body: JSON.stringify({
                     model: "granite3.1-moe:1b",
                     prompt: `You are a wildfire prevention AI assistant.
-                    You help analyze sensor data, camera feeds, and provide guidance on fire prevention and safety.
+                    You help analyze sensor data, camera feeds, and provide guidance on fire prevention.
                     Current context: The user is monitoring wildfire conditions through various sensors and camera feeds.
 
 User question: ${message}
