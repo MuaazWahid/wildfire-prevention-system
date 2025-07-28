@@ -124,7 +124,6 @@ function initializeMainApplication() {
                 table.innerHTML = '';
 
                 if (rows.length === 0) {
-                    console.error(`No sensor data detected for ${tableId}`);
                     table.innerHTML = '<tr><td colspan="3" style="color: white">No sensor data detected</td></tr>';
                     return;
                 }
@@ -132,8 +131,8 @@ function initializeMainApplication() {
                 // display latest 3 readings from sensor
                 // i < 4 because the first row might be the table header/metadata
                 for (let i = 0; i < 4 && i < rows.length; i++) {
-                    const row = rows[i];
-                    const cells = row.querySelectorAll('td');
+                    const cells = rows[i].querySelectorAll('td');
+                    // only process table rows that have 3 cells (time, measurement1, measurement2)
                     if (cells.length >= 2) {
                         const newRow = parseRowFunction(cells);
                         table.appendChild(newRow);
@@ -152,7 +151,8 @@ function initializeMainApplication() {
             (cells) => {
                 const timestamp = cells[0].textContent.trim();
                 const status = cells[1].textContent.trim();
-                const statusClass = cells[1].classList.contains('alert') ? 'alert' : 'safe';
+                // if gas is detected, css will color the output red based on class
+                const statusClass = cells[1].classList.contains('gas') ? 'gas' : 'no-gas';
                 const analogValue = cells[2].textContent.trim();
 
                 const newRow = document.createElement('tr');

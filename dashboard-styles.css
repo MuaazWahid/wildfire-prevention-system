@@ -207,10 +207,10 @@ body {
     background-color: #eee;
 }
 /* color gas output as green if safe, red if not safe */
-.gas-sensor-table .safe {
+.gas-sensor-table .no-gas {
     color: lightgreen;
 }
-.gas-sensor-table .alert {
+.gas-sensor-table .gas {
     color: red;
     font-weight: bold;
 }
