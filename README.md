@@ -2,7 +2,7 @@
 A web dashboard to help identify and prevent wildfires
 
 ## Objective:
-prevent wildfires in California utilizing IoT, ML, and GenAI.
+prevent wildfires in California using IoT, ML, and GenAI.
 
 ### Specifications:
 - Supporting only Firefox
