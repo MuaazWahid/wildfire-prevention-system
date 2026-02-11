@@ -1,7 +1,7 @@
 # 🔥 Predictive Wildfire Prevention System 🔥
 A webapp to help identify and prevent wildfires
-
 *part of our 2025 capstone project @ San Francisco Bay University*
+![Project Dashboard](images/project_dashboard.jpg "sample dashboard image")
 
 ### Customers:
 - firefighters like having a birds eye view of dangerous spots and where they are distributing their resources
